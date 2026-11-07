@@ -4,9 +4,10 @@ export function geneQuery(symbol:string){
  if(!/^[A-Z][A-Z0-9-]{0,24}$/.test(symbol))throw Error("Use a gene symbol, for example IL2RA.");
  return `MATCH (g:gene {name:"${symbol}"}) RETURN properties(g) AS gene LIMIT 1`;
 }
+export const CONNECTION_LIMIT=80;
 export function connectionQuery(symbol:string){
  geneQuery(symbol);
- return `MATCH (g:gene {name:"${symbol}"})-[r]-(n) WHERE n:pathway OR n.id = "MONDO_0005147" RETURN properties(startNode(r)) AS source, properties(endNode(r)) AS destination, type(r) AS predicate, properties(n) AS target, properties(r) AS evidence LIMIT 24`;
+ return `MATCH (g:gene {name:"${symbol}"})-[r]-(n) WHERE n:pathway OR n:reactome OR n:kegg OR n:gene_ontology OR n.id = "MONDO_0005147" RETURN properties(startNode(r)) AS source, properties(endNode(r)) AS destination, type(r) AS predicate, properties(n) AS target, properties(r) AS evidence ORDER BY CASE WHEN n.id = "MONDO_0005147" THEN 0 ELSE 1 END, predicate, target.id LIMIT ${CONNECTION_LIMIT}`;
 }
 export async function pankQuery(query:string,fetcher:Fetcher=fetch):Promise<any[]>{
  let data=await requestJson(PANKGRAPH,{method:"POST",body:JSON.stringify({query})},fetcher);

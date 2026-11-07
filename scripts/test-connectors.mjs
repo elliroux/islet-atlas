@@ -15,7 +15,7 @@ try{
   await writeFile(join(dir,file.replace(/\.ts$/,".js")),compiled);
  }
  const load=name=>import(pathToFileURL(join(dir,name+".js")));
- const {parseTranslator,translatorQuery}=await load("translator"),{geneQuery,parseLinks}=await load("pankgraph"),{parseTrials,deduplicate}=await load("literature"),{investigateConnections}=await load("investigation"),{requestJson,safeUrl}=await load("types");
+ const {parseTranslator,translatorQuery}=await load("translator"),{geneQuery,connectionQuery,parseLinks}=await load("pankgraph"),{parseTrials,deduplicate}=await load("literature"),{investigateConnections}=await load("investigation"),{requestJson,safeUrl}=await load("types");
  assert.throws(()=>geneQuery('IL2RA"}) DELETE n'));
  assert.throws(()=>translatorQuery('http://localhost'));
  assert.equal(safeUrl('javascript:alert(1)'),undefined);
@@ -30,7 +30,10 @@ try{
  assert.equal(links[0].subject,"Pathway");assert.equal(links[0].object,"IL2RA");assert.deepEqual(links[0].publications,["PMID:123"]);
  const records=parseTrials({studies:[{protocolSection:{identificationModule:{nctId:"NCT12345678",briefTitle:"Example"},statusModule:{overallStatus:"TERMINATED",whyStopped:"Recruitment stopped"},referencesModule:{references:[{pmid:"123"}]}}}]});
  assert.equal(records[0].whyStopped,"Recruitment stopped");assert.equal(records[0].hasResults,false);assert.deepEqual(records[0].linkedPublications,["PMID:123"]);assert.equal(deduplicate([...records,...records]).length,1);
- const failure=await investigateConnections("IL2RA",undefined,async()=>{throw Error("Offline")});assert.equal(failure.evidence.length,0);assert(failure.queries.every(q=>q.status==="unavailable"));assert(!failure.queries.some(q=>q.provider.includes("Translator")));
+ const failure=await investigateConnections("IL2RA",undefined,async()=>{throw Error("Offline")});assert.equal(failure.evidence.length,0);assert(failure.queries.every(q=>q.status==="unavailable"||q.status==="skipped"));assert(failure.queries.some(q=>q.provider.includes("Translator")&&q.status==="skipped"));
+ assert(connectionQuery("HLA-DQA1").includes("n:reactome OR n:kegg OR n:gene_ontology"));
+ const hla=await investigateConnections("HLA",undefined,async(url)=>String(url).includes("execute-api")?Response.json({records:[]}):String(url).includes("europepmc")?Response.json({resultList:{result:[]}}):Response.json({studies:[]}));
+ assert.deepEqual(hla.geneOptions,["HLA-DQA1","HLA-DQB1","HLA-DRB1"]);assert.match(hla.resolution,/family/);assert(hla.queries.some(q=>q.status==="skipped"));
  const fake=async(url,init)=>{
   if(String(url).includes('execute-api')){const query=JSON.parse(init.body).query;return Response.json({records:query.includes('AS gene')?[{gene:{id:'ENSG00000134460'}}]:[]})}
   if(String(url).includes('arax'))throw Error('Translator unavailable');
@@ -41,7 +44,7 @@ try{
  await assert.rejects(()=>requestJson('https://example.org',{},async()=>new Response('x'.repeat(12_000_001))),/size limit/);
  console.log('Connector tests passed: provenance, direction, deduplication, invalid input, schema drift, response bounds, partial and total outages.');
  if(process.argv.includes('--live')){
-  const run=await investigateConnections('IL2RA',process.argv.includes('--candidate')?'Aldesleukin':undefined);
+  const run=await investigateConnections(process.argv.find(a=>a.startsWith('--gene='))?.slice(7)||'IL2RA',process.argv.includes('--candidate')?'Aldesleukin':undefined);
   console.log(JSON.stringify({gene:run.gene,geneId:run.geneId,candidate:run.candidate,links:run.links.length,candidates:run.candidates.map(c=>({id:c.id,name:c.name,edges:c.links.length})),evidence:run.evidence.length,queries:run.queries},null,2));
   if(run.queries.some(q=>q.status==='unavailable'))process.exitCode=1;
   if(!run.candidates.length||!run.evidence.length||!run.links.length)process.exitCode=1;

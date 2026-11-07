@@ -1,5 +1,5 @@
 import {capture,type ConnectedRun,type QueryLog,type Fetcher} from "./types";
-import {PANKGRAPH,geneQuery,connectionQuery,pankQuery,parseLinks} from "./pankgraph";
+import {PANKGRAPH,CONNECTION_LIMIT,geneQuery,connectionQuery,pankQuery,parseLinks} from "./pankgraph";
 import {TRANSLATOR,translatorQuery,translator} from "./translator";
 import {EUROPEPMC,TRIALS,evidenceQueries,publications,trials,deduplicate} from "./literature";
 export async function investigateConnections(gene:string,candidate:string|undefined,fetcher:Fetcher=fetch):Promise<ConnectedRun>{
@@ -8,10 +8,15 @@ export async function investigateConnections(gene:string,candidate:string|undefi
  const genes=await capture("PanKgraph gene lookup",PANKGRAPH,{query:q},1,()=>pankQuery(q,fetcher),queries);
  const geneId=genes[0]?.gene?.id;
  if(typeof geneId==="string"&&/^ENSG\d+$/.test(geneId))run.geneId="ENSEMBL:"+geneId;
- else run.gaps.push("The gene identifier could not be resolved in PanKgraph. Translator was not queried; literature searches still ran.");
+ else {
+  run.resolution=gene==="HLA"?"HLA names a gene family/complex, not one gene symbol. Choose a specific gene below. Literature searches for HLA still ran; drug connections were not queried.":`No exact gene named ${gene} was resolved in PanKgraph. Check the official symbol. Drug connections were not queried; literature searches still ran.`;
+  if(gene==="HLA")run.geneOptions=["HLA-DQA1","HLA-DQB1","HLA-DRB1"];
+  run.gaps.push(run.resolution);
+  queries.push({provider:"NCATS Translator / ARAX",endpoint:TRANSLATOR,request:null,retrievedAt:new Date().toISOString(),status:"skipped",count:0,limit:12,note:"Not queried because a specific gene identifier was not resolved."});
+ }
  const cq=connectionQuery(gene),eq=evidenceQueries(candidate||gene);
  const [links,candidates,papers,registrations]=await Promise.all([
-  capture("PanKgraph pathways and T1D",PANKGRAPH,{query:cq},24,async()=>parseLinks(await pankQuery(cq,fetcher)),queries),
+  capture("PanKgraph pathways and T1D",PANKGRAPH,{query:cq},CONNECTION_LIMIT,async()=>parseLinks(await pankQuery(cq,fetcher)),queries),
   run.geneId?capture("NCATS Translator / ARAX",TRANSLATOR,translatorQuery(run.geneId),12,()=>translator(translatorQuery(run.geneId!),fetcher),queries):Promise.resolve([]),
   capture("Europe PMC / PubMed",EUROPEPMC,eq.publications,10,()=>publications(eq.publications,fetcher),queries),
   capture("ClinicalTrials.gov",TRIALS,eq.trials,10,()=>trials(eq.trials,fetcher),queries)
