@@ -1,7 +1,7 @@
 export type QueryLog = {provider:string;endpoint:string;request:unknown;retrievedAt:string;status:"complete"|"empty"|"unavailable";count:number;limit:number;note:string};
 export type GraphLink = {id:string;subject:string;predicate:string;object:string;kind:"Graph association"|"Provider assertion"|"Computational inference";properties:Record<string,unknown>;sources:string[];publications:string[];urls:string[]};
 export type Candidate = {id:string;name:string;links:GraphLink[]};
-export type EvidenceRecord = {id:string;title:string;url:string;provider:string;kind:"Publication"|"Trial registration";year:string;publicationTypes?:string[];status?:string;whyStopped?:string;population?:string;phase?:string;hasResults?:boolean;linkedPublications?:string[]};
+export type EvidenceRecord = {id:string;title:string;url:string;provider:string;kind:"Publication"|"Trial registration";year:string;publicationTypes?:string[];status?:string;whyStopped?:string;population?:string;phase?:string;conditions?:string[];hasResults?:boolean;linkedPublications?:string[]};
 export type ConnectedRun = {version:1;id:string;date:string;gene:string;geneId?:string;candidate?:string;question:string;links:GraphLink[];candidates:Candidate[];evidence:EvidenceRecord[];queries:QueryLog[];gaps:string[]};
 export type Fetcher=typeof fetch;
 export function safeUrl(value:unknown):string|undefined {if(typeof value!=="string")return;try{const u=new URL(value);if(u.protocol==="https:"||u.protocol==="http:")return u.href}catch{}}
