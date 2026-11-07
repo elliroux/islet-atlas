@@ -1,6 +1,6 @@
 export default function Community() {
   return <main className="community-page">
-    <a href="/">← Islet Atlas</a>
+    <p className="atlas-kicker">About</p>
     <h1>Build on Islet Atlas</h1>
     <p>An invitation to the #WeAreNotWaiting community, families, researchers, and developers: take a copy, investigate a question, and share what you learn.</p>
     <p><a className="cite" href="https://github.com/elliroux/islet-atlas">Open the GitHub repository ↗</a></p>

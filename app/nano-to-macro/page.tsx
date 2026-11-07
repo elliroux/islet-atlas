@@ -12,7 +12,7 @@ export default function NanoMacro(){
  function tour(j:number,s:number){setJourney(j);setStep(s);choose(journeys[j].ids[s])}
  const focus=level===null?null:positions[level];
  const filtered=nodes.filter(n=>(n.title+' '+n.body+' '+n.connection).toLowerCase().includes(query.trim().toLowerCase()));
- return <div className="nm-page"><nav className="nm-top" aria-label="Atlas navigation"><a href="/" className="nm-brand">◉ Islet Atlas</a><a href="/">Research workspace ↗</a><a href="/research">Research collection ↗</a></nav>
+ return <div className="nm-page">
  <main className="nm-main"><div className="nm-heading"><div><p className="nm-eyebrow">A LIVING SYSTEM, AT EVERY SCALE</p><h1>Nano to Macro</h1><p>Explore the biology of T1D—from an ion crossing a membrane to a whole human life.</p></div><span className="nm-edition">21 starting points<br/>7 connected levels</span></div>
  <div className="nm-tours"><span>Take a guided path</span>{journeys.map((j,i)=><button key={j.title} aria-current={journey===i || undefined} onClick={()=>tour(i,0)}>{j.title} ↗</button>)}</div>
  <div className="nm-workspace"><section className="nm-map" aria-label="Interactive map of biological scales"><div className="nm-toolbar"><button onClick={()=>{setLevel(null);setJourney(-1);history.replaceState(null,'',location.pathname)}}>⌂ All scales</button><span>{level===null?'Choose a level to zoom in':levels[level][0]}</span><button disabled={level===null||level===0} aria-label="Go to smaller scale" onClick={()=>visit(level!-1)}><span aria-hidden="true">−</span></button><button disabled={level===6} aria-label="Go to larger scale" onClick={()=>visit(level===null?0:level+1)}><span aria-hidden="true">+</span></button></div>

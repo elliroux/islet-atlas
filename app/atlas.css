@@ -1,0 +1,118 @@
+.atlas-site {
+  --atlas-paper: #f7f8f2;
+  --atlas-ink: #23483d;
+  --atlas-muted: #52695d;
+  --atlas-line: #d6e1d6;
+  --atlas-wash: #e8efe4;
+  min-height: 100vh;
+  background: var(--atlas-paper);
+  color: var(--atlas-ink);
+}
+
+.atlas-brandbar {
+  height: auto;
+  min-height: 62px;
+  padding: 12px clamp(16px, 3vw, 36px);
+  flex-wrap: wrap;
+  border-color: var(--atlas-line);
+}
+
+.atlas-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--atlas-ink);
+  font: 27px Georgia, serif;
+  text-decoration: none;
+}
+
+.atlas-wordmark img { width: 28px; height: 28px; }
+
+.atlas-brandbar > span,
+.atlas-kicker,
+.atlas-nav-group > span {
+  color: var(--atlas-muted);
+  font: 650 11px/1.5 system-ui, sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.atlas-layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  min-height: calc(100vh - 62px);
+}
+
+.atlas-nav {
+  display: block;
+  background: #fff;
+  border-right: 1px solid var(--atlas-line);
+  padding: 16px 12px;
+}
+
+.atlas-nav-group + .atlas-nav-group { margin-top: 14px; }
+.atlas-nav-group > span { display: block; margin: 0 8px 4px; }
+
+.atlas-nav a {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--atlas-ink);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.atlas-nav a:hover,
+.atlas-nav a[aria-current="page"] { background: var(--atlas-wash); }
+.atlas-nav a[aria-current="page"] { font-weight: 700; }
+.atlas-site :focus-visible { outline: 2px solid #77552b; outline-offset: 3px; }
+.atlas-content { min-width: 0; }
+.atlas-page { min-width: 0; }
+.atlas-page .intro { max-width: 65ch; }
+.atlas-page .hero { min-height: 0; }
+.atlas-page .hero p { color: var(--atlas-muted); }
+
+.atlas-overview-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.atlas-content .connected-workspace,
+.atlas-content .nm-page { min-height: 0; background: transparent; }
+
+.atlas-content .connected-workspace main,
+.atlas-content .nm-main,
+.atlas-content .foundation-page,
+.atlas-content .community-page,
+.atlas-content .atlas-page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px clamp(16px, 4vw, 56px) 64px;
+}
+
+.atlas-content .community-page { max-width: 860px; margin-left: 0; }
+.atlas-content .foundation-page h1 { margin: 0; }
+.atlas-content .connected-intro { text-align: left; max-width: none; margin: 0 0 24px; }
+.atlas-content .connected-search,
+.atlas-content .connected-start { margin-left: 0; }
+
+@media (max-width: 760px) {
+  .atlas-layout { display: block; }
+  .atlas-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--atlas-line);
+  }
+  .atlas-nav-group { display: flex; flex-wrap: wrap; align-items: center; }
+  .atlas-nav-group + .atlas-nav-group { margin-top: 0; }
+  .atlas-nav-group > span { margin-bottom: 0; }
+}
+
+@media (max-width: 500px) {
+  .atlas-overview-links { grid-template-columns: 1fr; gap: 0; }
+  .atlas-brandbar > span { display: none; }
+}

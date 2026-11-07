@@ -2,6 +2,8 @@ import { env } from "cloudflare:workers";
 import { getChatGPTUser } from "./chatgpt-auth";
 import type { Metadata } from "next";
 import "./globals.css";
+import "./atlas.css";
+import AtlasShell from "../components/AtlasShell";
 export const metadata: Metadata = {
  title: "Islet Atlas · Type 1 Diabetes Research Discovery",
  description: "Investigate findings across type 1 diabetes studies, trials and dataset catalogs.",
@@ -15,6 +17,6 @@ export default async function RootLayout({children}:Readonly<{children:React.Rea
    {user ? <><span>{user.displayName}</span><a href="https://isletatlas.org/atlas-sign-out">Sign out</a></>
     : <a href="https://isletatlas.org/atlas-sign-in">Sign in</a>}
   </nav>}
-  {children}
+  <AtlasShell>{children}</AtlasShell>
  </body></html>
 }

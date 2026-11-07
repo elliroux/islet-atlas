@@ -37,7 +37,7 @@ export default function Research(){
   catch{setNotice("Record details could not be loaded. Retry.")}
  }
  return <main className="foundation-page">
-  <a href="/">← Islet Atlas</a><h1>Research collection</h1>
+  <p className="atlas-kicker">Evidence</p><h1>Research collection</h1>
   <p>Search the evidence accumulated by Islet Atlas. Import progress and source coverage are recorded with each batch.</p>
   <div className="coverage-grid">
    <section><strong>{stats?.counts.reduce((n,r)=>n+r.count,0).toLocaleString()||"0"}</strong><span>stored records</span></section>
