@@ -15,6 +15,8 @@ Open the loopback address printed by the dev server. Browsing, public searches, 
 
 ## Optional integrations
 
+The [connected research workspace](https://islet-evidence-atlas.mattepaste.chatgpt.site/connections) links PanKgraph, NCATS Translator/ARAX, Europe PMC and ClinicalTrials.gov in a bounded gene-to-drug-to-evidence workflow. No model key is required. Source provenance, query logs, device snapshots and JSON exports are included. See [connector architecture and contribution instructions](research/connectors/README.md) for verified interfaces, tests and current limitations.
+
 The Worker uses vinext, React and Cloudflare D1. For notebook synchronization, bind your own D1 database as DB and apply drizzle/0000_swift_phalanx.sql. The notebook API scopes records by authenticated user. Local drafts also persist in the browser. For a shared deployment, use a trusted identity gateway that strips incoming identity headers and inserts verified identities, or replace app/chatgpt-auth.ts before enabling notebook sync.
 
 Model-assisted research is optional. Set OPENAI_API_KEY privately on your Worker and ATLAS_AI_OWNER_ID to the authorized maintainer’s identity from your gateway. In loopback development the simulated signed-in identity is local_seedy. All three model-backed endpoints use the same check. The default experience works without these settings. Keep keys and research notebooks out of issues and pull requests.
