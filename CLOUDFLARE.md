@@ -41,3 +41,25 @@ The DB binding points to `islet-atlas-db`, ID `5d965dbc-66fd-422e-a5b7-594788a26
     pnpm exec wrangler deploy --dry-run --config dist/server/wrangler.json
 
 These checks do not deploy to Cloudflare or modify the remote database.
+
+## Independent sign-in
+
+Create a Cloudflare Access self-hosted application for the exact path
+`isletatlas.org/atlas-sign-in`. Use an Allow policy for the intended accounts,
+starting with the owner. The Worker verifies the signed Access assertion on this route and stores it
+in a host-only, HTTP-only session cookie.
+Keep the root path and research API outside this Access application.
+
+Set these runtime variables on the Worker before enabling sign-in. Wrangler uses
+`keep_vars` to retain them on builds from GitHub. A standalone build without
+Access configured defaults to public access without a signed-in identity.
+
+- `ATLAS_AUTH_MODE=access`
+- `ATLAS_ACCESS_ISSUER=https://<team>.cloudflareaccess.com`
+- `ATLAS_ACCESS_AUDIENCE` to the application's AUD tag
+- `ATLAS_ACCESS_AI_OWNER_EMAIL` to the owner's email from the Access identity provider
+
+Keep `OPENAI_API_KEY` as a Worker secret. Verify signed-out investigations use
+the curated guide and owner investigations report model-assisted output. Test
+the notebook before enabling other accounts. Independent identities use an
+`access:` namespace, so existing ChatGPT notebooks are separate.

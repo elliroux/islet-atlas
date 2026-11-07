@@ -7,9 +7,8 @@
     "nodejs_compat"
   ],
   "workers_dev": true,
-  "vars": {
-    "ATLAS_AUTH_MODE": "public"
-  },
+  // Keep the production Access settings managed on the existing Worker.
+  "keep_vars": true,
   "d1_databases": [
     {
       "binding": "DB",

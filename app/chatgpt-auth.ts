@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { headers } from "next/headers";
+import { getAccessUser } from "./access-auth";
 import { redirect } from "next/navigation";
 
 export type ChatGPTUser = {
@@ -21,8 +22,10 @@ const CALLBACK_PATH = "/callback";
 
 export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
   // Direct hosting has no trusted ChatGPT identity gateway. Fail closed.
-  if (env.ATLAS_AUTH_MODE === "public") return null;
+  if (env.ATLAS_AUTH_MODE === "public" ||
+      (process.env.NEXT_PUBLIC_ATLAS_STANDALONE === "true" && env.ATLAS_AUTH_MODE !== "access")) return null;
   const requestHeaders = await headers();
+  if (env.ATLAS_AUTH_MODE === "access") return getAccessUser(requestHeaders);
   const userId = requestHeaders.get(USER_ID_HEADER);
   const email = requestHeaders.get(USER_EMAIL_HEADER);
   if (!userId || !email) return null;
