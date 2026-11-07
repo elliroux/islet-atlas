@@ -39,7 +39,7 @@ function upsert(record:StoredRecord){
 async function init(id:CollectionId){
  await db().prepare("INSERT OR IGNORE INTO research_imports(id,cursor,state,total,processed,updated,lease_until) VALUES (?,'*','Ready',0,0,?,0)").bind(id,new Date().toISOString()).run();
 }
-async function loadPage(id:CollectionId,cursor:string){
+async function loadPage(id:CollectionId,cursor:string,knownTotal=0){
  if(id==="publications"||id==="recent"){
   const window=id==="recent"?" AND FIRST_IDATE:["+new Date(Date.now()-30*86400000).toISOString().slice(0,10)+" TO "+new Date().toISOString().slice(0,10)+"]":"";
   const query=collections[0].query+window+" sort_date:y";
@@ -51,7 +51,7 @@ async function loadPage(id:CollectionId,cursor:string){
  if(id==="trials"){
   const r=await json("https://clinicaltrials.gov/api/v2/studies?pageSize=100&countTotal=true&query.cond=Type%201%20Diabetes"+(cursor==="*"?"":"&pageToken="+encodeURIComponent(cursor)));
   if(!Array.isArray(r.studies))throw Error("Invalid ClinicalTrials.gov page");
-  return {records:r.studies.map(trialRecord),next:r.nextPageToken||"",total:r.totalCount||0};
+  return {records:r.studies.map(trialRecord),next:r.nextPageToken||"",total:r.totalCount||knownTotal||(await json("https://clinicaltrials.gov/api/v2/studies?pageSize=1&countTotal=true&query.cond=Type%201%20Diabetes")).totalCount||0};
  }
  const records:StoredRecord[]=data.findings.map(f=>({id:"atlas-"+f.id,provider:"Atlas",kind:"Reviewed finding",title:f.title,year:0,doi:null,pmcid:null,url:f.url,abstract:f.summary+" "+f.effect,license:null,full_text:null,full_text_status:"Reviewed source locator",document:JSON.stringify(f),updated:new Date().toISOString()}));
  return {records,next:"",total:records.length};
@@ -96,7 +96,7 @@ export async function importBatch(id:CollectionId){
    return {count:page.count,complete:page.count===0};
   }
   const cursor=state.state==="Complete"?"*":state.cursor;
-  const page=await loadPage(id,cursor);
+  const page=await loadPage(id,cursor,state.total);
   const processed=(cursor==="*"?0:state.processed)+page.records.length;
   await db().batch([...page.records.map(upsert),db().prepare("UPDATE research_imports SET cursor=?,state=?,total=?,processed=?,updated=?,error=NULL,lease=NULL,lease_until=0 WHERE id=? AND lease=?").bind(page.next||"*",page.next?"Importing":"Complete",page.total,processed,date,id,token),db().prepare("INSERT INTO research_import_runs VALUES (?,?,?,?,?,?)").bind(token,id,page.records.length,"Succeeded","Saved records and checkpoint together",date)]);
   return {count:page.records.length,processed,total:page.total,complete:!page.next};

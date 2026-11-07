@@ -21,12 +21,18 @@ def update(source, batches):
             headers=HEADERS,
             method="POST",
         )
-        try:
-            with urllib.request.urlopen(request, timeout=100) as response:
-                result = json.load(response)
-        except (urllib.error.URLError, TimeoutError) as error:
-            print(json.dumps({"source": source, "saved": saved, "error": str(error)}), flush=True)
-            return
+        result = None
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(request, timeout=100) as response:
+                    result = json.load(response)
+                break
+            except (urllib.error.URLError, TimeoutError) as error:
+                retryable = not isinstance(error, urllib.error.HTTPError) or error.code in (429, 500, 502, 503, 504)
+                if not retryable or attempt == 2:
+                    print(json.dumps({"source": source, "saved": saved, "error": str(error)}), flush=True)
+                    return
+                time.sleep(10 * (attempt + 1))
         saved += result.get("count", 0)
         if result.get("complete") or result.get("busy"):
             break
