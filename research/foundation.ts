@@ -57,10 +57,11 @@ async function loadPage(id:CollectionId,cursor:string){
  return {records,next:"",total:records.length};
 }
 async function importText(){
- const rows=await db().prepare("SELECT * FROM research_records WHERE full_text_status='Eligible' ORDER BY updated DESC LIMIT 3").all<StoredRecord>();
+ const rows=await db().prepare("SELECT * FROM research_records WHERE full_text_status='Eligible' OR (full_text_status='Retry full text' AND updated<?) ORDER BY updated DESC LIMIT 3").bind(new Date(Date.now()-3600000).toISOString()).all<StoredRecord>();
  const statements:D1PreparedStatement[]=[];
  for(const row of rows.results){
   if(!row.pmcid||!/^PMC\d+$/.test(row.pmcid)||!reusable(row.license||""))continue;
+  try{
   const response=await fetch("https://www.ebi.ac.uk/europepmc/webservices/rest/"+row.pmcid+"/fullTextXML",{signal:AbortSignal.timeout(20000)});
   if(response.status===404){statements.push(db().prepare("UPDATE research_records SET full_text_status='Full text unavailable' WHERE id=?").bind(row.id));continue}
   if(!response.ok)throw Error("Full-text provider returned HTTP "+response.status);
@@ -70,6 +71,9 @@ async function importText(){
   const text=plain(body);
   const bounded=text.slice(0,250000);
   statements.push(db().prepare("UPDATE research_records SET full_text=?,full_text_status=?,updated=? WHERE id=?").bind(bounded,text.length>bounded.length?"Indexed body (truncated)":"Indexed body",new Date().toISOString(),row.id));
+  }catch{
+   statements.push(db().prepare("UPDATE research_records SET full_text_status='Retry full text',updated=? WHERE id=?").bind(new Date().toISOString(),row.id));
+  }
  }
  return {statements,count:rows.results.length};
 }
