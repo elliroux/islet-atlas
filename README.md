@@ -13,6 +13,10 @@ Use Node 22.13 or later and pnpm 11.25.0. Clone this repository or unzip the rel
 
 Open the loopback address printed by the dev server. Browsing, public searches, the curated investigation guide, source comparisons, local notebooks and Markdown export work without a model key. Public literature services require internet access. Use pnpm build for a production build. If you publish a fork, regenerate public/islet-atlas-source.zip from the Git checkout with python3 scripts/community-release.py after staging your files and before building.
 
+## Independent hosting
+
+See [Cloudflare deployment and migration status](CLOUDFLARE.md) for the standalone build, database setup, and remaining migration steps.
+
 ## Optional integrations
 
 The [connected research workspace](https://islet-evidence-atlas.mattepaste.chatgpt.site/connections) links PanKgraph, NCATS Translator/ARAX, Europe PMC and ClinicalTrials.gov in a bounded gene-to-drug-to-evidence workflow. No model key is required. Source provenance, query logs, device snapshots and JSON exports are included. See [connector architecture and contribution instructions](research/connectors/README.md) for verified interfaces, tests and current limitations.

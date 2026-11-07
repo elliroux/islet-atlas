@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "islet-atlas",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "vars": {
+    "ATLAS_AUTH_MODE": "public"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "islet-atlas-db",
+      "database_id": "5d965dbc-66fd-422e-a5b7-594788a26702",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}

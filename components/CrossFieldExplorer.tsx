@@ -52,7 +52,7 @@ export default function CrossFieldExplorer({mission}:{mission:Mission}){
       <small>The problem and mechanism terms drive retrieval. Your question guides the interpretation of retrieved studies.</small>
       <button className="find-connections" disabled={busy}>{busy?"Searching across fields…":"Search across fields"}</button>
     </form>
-    <p role="status">{error||run?.notice}</p>{run?.notice.includes("configured maintainer")&&<a href="/signin-with-chatgpt?return_to=%2F">Sign in for maintainer AI access ↗</a>}
+    <p role="status">{error||run?.notice}</p>{process.env.NEXT_PUBLIC_ATLAS_STANDALONE!=="true"&&run?.notice.includes("configured maintainer")&&<a href="/signin-with-chatgpt?return_to=%2F">Sign in for maintainer AI access ↗</a>}
     {run&&<div>
       <h3>{run.question}</h3>
       <small>{new Date(run.date).toLocaleString()} · Stored research plus up to eight records per live search · Focused prior-testing results appear in the search log. Titles require inspection before deciding whether the exact idea was tested.</small>

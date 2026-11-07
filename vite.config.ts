@@ -10,6 +10,7 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 
 const { d1, r2 } = hostingConfig;
+const standalone = process.env.ATLAS_DEPLOY_TARGET === "cloudflare";
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
@@ -44,6 +45,7 @@ export default defineConfig(async ({ command }) => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    define: { "process.env.NEXT_PUBLIC_ATLAS_STANDALONE": JSON.stringify(standalone ? "true" : "false") },
     server: {
       ...(managedLinux
         ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] }
@@ -54,12 +56,12 @@ export default defineConfig(async ({ command }) => {
     },
     plugins: [
       vinext(),
-      sites({ mockAuth: !managedLinux }),
+      sites({ mockAuth: !standalone && !managedLinux }),
       connectorPreview(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
         inspectorPort: false,
-        config: {
+        ...(standalone ? { configPath: "wrangler.jsonc" } : { config: {
           ...localBindingConfig,
           ...(command === "serve"
             ? {
@@ -72,8 +74,8 @@ export default defineConfig(async ({ command }) => {
                 ],
               }
             : {}),
-        },
-        ...(command === "serve"
+        } }),
+        ...(!standalone && command === "serve"
           ? {
               auxiliaryWorkers: [
                 {
