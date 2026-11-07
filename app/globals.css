@@ -19,3 +19,6 @@
 .discovery summary{cursor:pointer}.narrow,.connection{background:white;border:1px solid #cfdbd4;border-radius:10px;margin:12px 0;padding:16px}
 .narrow fieldset{border:0;margin:10px 0;padding:0}.narrow legend{font-weight:600}.narrow button{margin:3px}.narrow input{display:block;width:min(100%,430px);padding:8px}.connection summary strong{font:23px/1.25 Georgia,serif}.connection summary small{display:inline-block;margin-right:10px}.finding-pair section{padding:13px;background:#f2f6f2;border-radius:7px}
 @media(max-width:700px){.mission-buttons,.finding-pair{grid-template-columns:1fr}}
+
+.cross-field{margin:26px 0 32px;padding:24px;background:#edf3ec;border:1px solid #cddacc;border-radius:12px}
+.cross-field form{max-width:650px}.cross-field label{display:block;margin-top:14px}.cross-field select,.cross-field input,.cross-field textarea{display:block;width:100%;padding:10px;border:1px solid #acbfb5;border-radius:6px;background:#fff}.cross-field textarea{min-height:84px;resize:vertical}.cross-field h4{margin:16px 0 4px}.cross-field details{margin:15px 0}.cross-field summary{cursor:pointer}.cross-field a{overflow-wrap:anywhere}

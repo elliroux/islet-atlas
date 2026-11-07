@@ -1,4 +1,5 @@
 "use client";
+import CrossFieldExplorer from "./CrossFieldExplorer";
 import {useState} from "react";
 import {discover,missions,type Mission} from "../research/discovery";
 import {familyOf} from "../research/data";
@@ -18,6 +19,8 @@ export default function ConnectionExplorer({inspect,investigate}:{inspect:(id:st
   function toggle(value:string){select(old=>old.includes(value)?old.filter(x=>x!==value):[...old,value]);}
   return <div className="discovery">
     <div className="mission-buttons">{missions.map(m=><button key={m} aria-pressed={m===mission} onClick={()=>setMission(m)}>{m}</button>)}</div>
+    <CrossFieldExplorer key={mission} mission={mission}/>
+    <h2>Connections in the reviewed Atlas</h2>
     <button className="find-connections" onClick={()=>start(true)}>Find connections</button>
     {started && <>
       <details className="narrow"><summary>Narrow by study variables</summary>
