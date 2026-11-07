@@ -60,7 +60,7 @@ export default function CrossFieldExplorer({mission}:{mission:Mission}){
       {run.candidates.map((c,i)=><section className="connection" key={i}>
         <small>AI-generated hypothesis · {c.candidate}</small><h3>{c.title}</h3>
         <h4>What the studies observed</h4><p>{c.observation}</p>
-        <div className="finding-pair">{[["T1D evidence",c.t1dIds],["Evidence from another field",c.otherIds]].map(([title,ids])=><section key={title as string}><strong>{title}</strong>{(ids as string[]).map(id=>{const s=run.sources.find(s=>s.id===id)!;return <p key={id}><a href={s.url} target="_blank" rel="noreferrer">{s.title} ↗</a><small>{s.year} · Abstract</small></p>})}</section>)}</div>
+        <div className="finding-pair">{[["T1D evidence",c.t1dIds],["Evidence from another field",c.otherIds]].map(([title,ids])=><section key={title as string}><strong>{title}</strong>{(ids as string[]).map(id=>{const s=run.sources.find(s=>s.id===id)!;return <p key={id}><a href={s.url} target="_blank" rel="noreferrer">{s.title} ↗</a><small>{s.year} · Source record</small></p>})}</section>)}</div>
         <h4>Why it could connect</h4><p>{c.bridge}</p>
         <h4>Where the analogy could break</h4><p>{c.challenge}</p>
         <h4>Prior testing in the retrieved evidence</h4><p>{c.priorWork}</p>

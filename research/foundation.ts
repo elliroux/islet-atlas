@@ -148,7 +148,7 @@ export async function storedEvidence(terms:string):Promise<CrossSource[]>{
  const tokens=(terms.toLowerCase().match(/[a-z0-9-]{3,}/g)||[]);
  return rows.results.filter(r=>r.abstract||r.full_text).map(r=>{
    const passages=(r.full_text||"").split(/(?<=[.!?])\s+/).filter(p=>tokens.some(t=>p.toLowerCase().includes(t))).slice(0,12).join(" ").slice(0,5000);
-   return {id:r.id,title:r.title,year:String(r.year),url:r.url,abstract:("Abstract: "+r.abstract.slice(0,5000)+(passages?" Indexed article-body passages: "+passages:"")),roles:/type [i1] diabetes|type 1 diabetes|insulin.dependent diabetes/i.test(r.title+" "+r.abstract)?["T1D"]:["Other fields"]};
+   return {id:r.id,title:r.title,year:String(r.year),url:r.url,abstract:("Abstract: "+r.abstract.slice(0,5000)+(passages?" Indexed article-body passages: "+passages:"")),roles:/type [i1] diabetes|type 1 diabetes|insulin.dependent diabetes/i.test(r.title+" "+r.abstract)?["T1D"]:["Unclassified stored evidence"]};
  });
 
 }
