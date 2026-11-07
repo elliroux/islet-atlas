@@ -1,0 +1,73 @@
+[
+  {
+    "targets": [
+      "pubmed-34913020",
+      "pubmed-38441899"
+    ],
+    "id": "pubmed-22751874",
+    "title": "Effect of Cholecalciferol as Adjunctive Therapy With Insulin on Protective Immunologic Profile and Decline of Residual β-Cell Function in New-Onset Type 1 Diabetes Mellitus",
+    "year": 2012,
+    "relation": "Independent cohort · related positive signal",
+    "interpretation": "In a 38-person Brazilian trial after diagnosis, fewer vitamin D3 recipients crossed a low stimulated C-peptide threshold by month 18 (6.2% versus 37.5% with placebo, P=0.047). At that visit the groups had similar absolute stimulated C-peptide levels (P=0.73) and insulin doses (P=0.91).",
+    "reason": "This supports testing preservation of insulin production, while leaving the vitamin D2 result unresolved. The team tested D3 and threshold crossing over 18 months; Nwosu studied D2 and the monthly change in meal-test C-peptide over 12 months. The Ferraz review includes Gabbay as reference 33.",
+    "url": "https://jamanetwork.com/journals/jamapediatrics/fullarticle/1212223#:~:text=The%20cumulative%20incidence%20of%20progression",
+    "locator": "Results, Figure 3B (threshold); Table 2 (month-18 concentrations and insulin dose). Ferraz review, Figure 3B and reference 33."
+  },
+  {
+    "targets": [
+      "pubmed-34913020",
+      "pubmed-38441899",
+      "pubmed-20805274"
+    ],
+    "id": "pubmed-20357369",
+    "title": "No Effect of the 1α,25-Dihydroxyvitamin D3 on β-Cell Residual Function and Insulin Requirement in Adults With New-Onset Type 1 Diabetes",
+    "year": 2010,
+    "relation": "Independent cohort · challenges a class-wide effect",
+    "interpretation": "Walter's team randomized 40 adults soon after diagnosis to calcitriol or placebo for nine months. The primary 18-month meal-test C-peptide result was nearly identical between groups (P=0.98), nine months after treatment stopped. Both groups lost about 40% of their baseline response.",
+    "reason": "An independent trial of active vitamin D supports IMDIAB XIII's unfavorable calcitriol finding. It tests a different formulation, age group and follow-up from the youth vitamin D2 study, so it cannot settle whether D2 changes the rate of decline during treatment.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2890336/#:~:text=Efficacy%20parameters%20in%20treatment",
+    "locator": "Methods, End point assessment during second phase; Table 2 (AUC C-peptide at months 9 and 18) and Figure 3."
+  },
+  {
+    "targets": [
+      "donor-anti-cd3",
+      "zim-insulin",
+      "zim-harms"
+    ],
+    "id": "pubmed-27208344",
+    "year": 2016,
+    "title": "Phase 3 Trial of Transplantation of Human Islets in Type 1 Diabetes Complicated by Severe Hypoglycemia",
+    "relation": "Related human trial · different immune regimen",
+    "interpretation": "In CIT-07, 42/48 adults had HbA1c below 7% at one year and no severe low from days 28–365. Only 25/48 were insulin independent at one year. Five needed transfusions for bleeding and two had infections attributed to immunosuppression.",
+    "reason": "This eight-center, single-arm trial shared a lead investigator with the Minnesota pilot. Its first transplant used ATG and etanercept followed by maintenance immune suppression. Donor-islet benefit with a different regimen narrows the claim that anti-CD3 drove the earlier success. Different cell sources and eligibility also prevent a direct efficacy comparison with zimislecel.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5317236/#:~:text=Forty-two%20of%2048",
+    "locator": "Hering et al., Diabetes Care, July 2016. Results, Efficacy and Safety; Figures 1A and 2A; Methods, Other Study Treatments. PMID 27208344."
+  },
+  {
+    "targets": [
+      "vx264-cpep",
+      "zim-function"
+    ],
+    "id": "pubmed-38012450",
+    "year": 2023,
+    "title": "Encapsulated stem cell–derived β cells exert glucose control in patients with type 1 diabetes",
+    "relation": "Related human trial · different device and cell product",
+    "interpretation": "Among ten PEC-Direct recipients, four showed measurable meal-stimulated C-peptide at month six; three sustained at least 0.10 nmol/L through month twelve. All received systemic immune suppression. Two people had serious events, one attributed to surgery and one to immune suppression.",
+    "reason": "This earlier trial used precursor cells and perforated devices permitting blood vessels to enter. Both pore design and cell dose changed. Its results suggest what to measure in explanted devices, but cannot explain the VX-264 day-90 miss or establish protection without medication.",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11471599/#:~:text=Detectable%20C-peptide%20remained%20present",
+    "locator": "Keymeulen et al., published online Nov 27, 2023; Oct 2024 issue. Table 1, Results: Overview of trial design and Meal-stimulated plasma C-peptide. NCT03163511; PMID 38012450."
+  },
+  {
+    "targets": [
+      "pubmed-39194033"
+    ],
+    "id": "pubmed-22751874",
+    "title": "Effect of Cholecalciferol as Adjunctive Therapy With Insulin on Protective Immunologic Profile and Decline of Residual β-Cell Function in New-Onset Type 1 Diabetes Mellitus",
+    "year": 2012,
+    "relation": "Included trial · overlapping review",
+    "interpretation": "In a 38-person Brazilian trial after diagnosis, fewer vitamin D3 recipients crossed a low stimulated C-peptide threshold by month 18 (6.2% versus 37.5% with placebo, P=0.047). At that visit the groups had similar absolute stimulated C-peptide levels (P=0.73) and insulin doses (P=0.91).",
+    "reason": "Ferraz includes Gabbay as reference 33 in Figure 3B. The trial supplies part of the pooled estimate. Its original measurements can be inspected separately.",
+    "url": "https://jamanetwork.com/journals/jamapediatrics/fullarticle/1212223#:~:text=The%20cumulative%20incidence%20of%20progression",
+    "locator": "Results, Figure 3B (threshold); Table 2 (month-18 concentrations and insulin dose). Ferraz review, Figure 3B and reference 33."
+  }
+]

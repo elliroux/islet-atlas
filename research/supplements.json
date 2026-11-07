@@ -1,0 +1,72 @@
+[
+  {
+    "id": "pubmed-15043959",
+    "title": "European Nicotinamide Diabetes Intervention Trial (ENDIT): a randomised controlled trial of intervention before the onset of type 1 diabetes",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/15043959/#abstract",
+    "year": 2004,
+    "family": "ENDIT",
+    "stage": "Before clinical diagnosis",
+    "design": "Double-blind randomized trial. 552 relatives with islet-cell antibodies and a glucose tolerance test below the diabetes threshold received nicotinamide (vitamin B3) or placebo.",
+    "endpoint": "Clinical diabetes by WHO criteria during five years of planned treatment.",
+    "result": "Diabetes developed in 82 nicotinamide recipients and 77 placebo recipients. Adjusted hazard ratio 1.01 (95% CI 0.73–1.38). Serious adverse event counts were similar.",
+    "limit": "168 of 552 participants withdrew. The interval permits a smaller benefit or harm. The study did not test treatment after diagnosis.",
+    "locator": "PubMed abstract, Method and Findings.",
+    "access": "Public abstract checked."
+  },
+  {
+    "id": "pubmed-34913020",
+    "title": "Ergocalciferol in New-onset Type 1 Diabetes: A Randomized Controlled Trial",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/34913020/#abstract",
+    "year": 2022,
+    "family": "Nwosu vitamin D2 trial · NCT03046927",
+    "stage": "Within three months of diagnosis",
+    "design": "Single-center, double-blind vitamin D2 versus placebo trial. Each arm had 18 young people aged 10–21 with residual insulin secretion.",
+    "endpoint": "Stimulated C-peptide concentration over 12 months; HbA1c and daily insulin dose were also measured.",
+    "result": "The original report found no statistically significant between-group difference in stimulated C-peptide concentration at individual visits (reported P=0.08) or daily insulin dose. HbA1c rose more slowly on vitamin D2 in a trend analysis.",
+    "limit": "Small cohort with measurable insulin production at enrollment. Persistence after treatment ended is unknown. The 2024 secondary report analyzes these same participants.",
+    "locator": "PubMed abstract, Methods and Results. The original analysis reports concentrations at visits.",
+    "access": "Public abstract checked; full text available (PMC8668202)."
+  },
+  {
+    "id": "pubmed-38441899",
+    "title": "Effect of Ergocalciferol on β-Cell Function in New-Onset Type 1 Diabetes: A Secondary Analysis of a Randomized Clinical Trial",
+    "url": "https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2815690#:~:text=monthly%20overall%20temporal%20trends",
+    "year": 2024,
+    "family": "Nwosu vitamin D2 trial · NCT03046927",
+    "stage": "Within three months of diagnosis",
+    "design": "Secondary analysis of the same 36 randomized participants in the 12-month vitamin D2 trial (PMID 34913020).",
+    "endpoint": "Monthly trend in percent change from baseline in meal-stimulated C-peptide area under the curve, integrating measurements across the meal test.",
+    "result": "The estimated monthly change was −2.8% (SE 0.7%) with vitamin D2 versus −4.7% (SE 0.6%) with placebo; P=0.03 for the trend comparison.",
+    "limit": "This uses another measurement and model in the original cohort. It adds no independent replication or post-treatment follow-up and does not establish a durable benefit.",
+    "locator": "JAMA Network Open, Methods and Results; Figure, panel C.",
+    "access": "Public full text checked."
+  },
+  {
+    "id": "pubmed-20805274",
+    "title": "No Protective Effect of Calcitriol on β-Cell Function in Recent-Onset Type 1 Diabetes: The IMDIAB XIII Trial",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2928344/#:~:text=Twenty-seven%20subjects",
+    "year": 2010,
+    "family": "IMDIAB XIII · NCT01120119",
+    "stage": "Within 12 weeks of diagnosis",
+    "design": "Independent, double-blind randomized trial. 34 people aged 11–35 received calcitriol (active vitamin D) or placebo for two years.",
+    "endpoint": "Basal C-peptide over two years; meal-stimulated C-peptide response at 12 months.",
+    "result": "C-peptide fell by 44.4% with calcitriol and 42.5% with placebo by 24 months. Groups showed no significant differences in C-peptide, HbA1c or insulin requirements at the reported visits.",
+    "limit": "27 of 34 completed follow-up. The sample size calculation targeted a 0.12 nmol/L basal C-peptide difference at two years. The formulation and endpoints differ from the vitamin D2 trial.",
+    "locator": "Diabetes Care 33:1962–1963, Statistical power and analysis, Results, and Conclusions.",
+    "access": "Public full text checked against the university-hosted article."
+  },
+  {
+    "id": "pubmed-39194033",
+    "title": "Effects of dietary supplementation in treatment and control of progression and complications of insulin-dependent diabetes mellitus: a systematic review with meta-analyses of randomized clinical trials",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11349153/#:~:text=Effects%20of%20vitamin%20D%20supplementation",
+    "year": 2024,
+    "family": "Ferraz supplement systematic review",
+    "stage": "After diagnosis; trial populations vary",
+    "design": "Systematic review and meta-analyses of randomized trials. Outcomes and vitamin D formulations varied between trials.",
+    "endpoint": "Fasting C-peptide pooled across four reports (144 participants); HbA1c pooled separately.",
+    "result": "The pooled fasting C-peptide result favored vitamin D (P=0.023), but the authors rated the evidence very low quality. The pooled HbA1c result did not show a significant benefit.",
+    "limit": "This is a synthesis, not a newly enrolled cohort. Its fasting C-peptide analysis includes the original Nwosu trial (reference 36). A shared off-treatment follow-up period was not established.",
+    "locator": "Results, Effects of vitamin D supplementation, Figures 2B and 3B; reference 36 identifies Nwosu.",
+    "access": "Public full text checked in SciELO."
+  }
+]
