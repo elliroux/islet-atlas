@@ -1,3 +1,4 @@
+import {storedEvidence,rememberSources} from "../../../research/foundation";
 import {z} from "zod";
 import {hostedModelKey} from "../../hosted-model";
 import {problems,candidateSchema,validCandidate,mergeSources,searchQuery,type CrossSource,type CrossRun} from "../../../research/cross-field";
@@ -46,10 +47,16 @@ export async function POST(req:Request){
   const run:CrossRun={problem:problem.title,question:body.question||problem.question,date:new Date().toISOString(),queries,sources:[],candidates:[],notice:"",errors:[]};
   const searches=await Promise.allSettled(queries.map(q=>search(q.query,q.role)));
   searches.forEach((result,i)=>{if(result.status==="fulfilled"){queries[i].count=result.value.length;run.sources.push(...result.value)}else run.errors.push(queries[i].role+" search failed. Retry to complete coverage.")});
+  try{
+    const stored=await storedEvidence(body.terms||problem.mechanism);
+    run.sources=mergeSources([...run.sources,...stored]);
+    run.queries.push({role:"Stored collection",query:body.terms||problem.mechanism,count:stored.length});
+    await rememberSources(run.sources);
+  }catch{run.errors.push("Stored collection could not be read or updated. Live-search evidence is still available.");}
   run.sources=mergeSources(run.sources);
   const key=await hostedModelKey();
   if(!key)run.notice="Live records retrieved. AI hypothesis synthesis is available to the configured maintainer when signed in.";
-  else if(!queries.every(q=>q.count))run.notice="Both searches need abstract-bearing records before a cross-field hypothesis can be generated.";
+  else if(!["T1D","Other fields"].every(role=>run.sources.some(s=>s.roles.includes(role))))run.notice="Both searches need abstract-bearing records before a cross-field hypothesis can be generated.";
   else try{run.candidates=await propose(run,key);run.notice=run.candidates.length?"AI-generated research candidates. Check the linked abstracts and full papers before relying on the interpretation.":"No defensible bridge was identified in these retrieved abstracts. Try another problem or mechanism."}
   catch{run.notice="AI synthesis could not return validated source-linked candidates. Retrieved records are available below. Retry the search."}
     if(run.candidates.length){
@@ -65,6 +72,7 @@ export async function POST(req:Request){
       }else run.errors.push("A focused prior-testing search failed. Novelty remains unresolved.");
     });
     run.sources=mergeSources(run.sources);
+    try{await rememberSources(run.sources)}catch{run.errors.push("Prior-testing records could not be saved to the collection.");}
   }
   // Abstracts inform synthesis internally. Only short metadata is sent to the public client.
   return Response.json({...run,sources:run.sources.map(s=>({...s,abstract:""}))},{headers:{"Cache-Control":"no-store"}});

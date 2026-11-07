@@ -55,7 +55,7 @@ export default function CrossFieldExplorer({mission}:{mission:Mission}){
     <p role="status">{error||run?.notice}</p>{run?.notice.includes("configured maintainer")&&<a href="/signin-with-chatgpt?return_to=%2F">Sign in for maintainer AI access ↗</a>}
     {run&&<div>
       <h3>{run.question}</h3>
-      <small>{new Date(run.date).toLocaleString()} · Up to eight indexed abstracts per search · Focused prior-testing results appear in the search log. Titles require inspection before deciding whether the exact idea was tested.</small>
+      <small>{new Date(run.date).toLocaleString()} · Stored research plus up to eight records per live search · Focused prior-testing results appear in the search log. Titles require inspection before deciding whether the exact idea was tested.</small>
       {run.errors.map(e=><p key={e}>{e}</p>)}
       {run.candidates.map((c,i)=><section className="connection" key={i}>
         <small>AI-generated hypothesis · {c.candidate}</small><h3>{c.title}</h3>
