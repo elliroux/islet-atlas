@@ -12,3 +12,10 @@
 .community-link { display: inline-block; margin: 1rem 0; color: inherit; }
 .community-page { max-width: 46rem; margin: 3rem auto; padding: 1rem 1.5rem; }
 .community-page p { line-height: 1.6; }
+
+.discovery{max-width:1000px}.mission-buttons,.finding-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mission-buttons button{padding:22px 18px;text-align:left;font:clamp(20px,2.3vw,30px)/1.2 Georgia,serif}
+.discovery button[aria-pressed=true],.find-connections{background:#174e46;color:white}.find-connections{margin:14px 0}
+.discovery summary{cursor:pointer}.narrow,.connection{background:white;border:1px solid #cfdbd4;border-radius:10px;margin:12px 0;padding:16px}
+.narrow fieldset{border:0;margin:10px 0;padding:0}.narrow legend{font-weight:600}.narrow button{margin:3px}.narrow input{display:block;width:min(100%,430px);padding:8px}.connection summary strong{font:23px/1.25 Georgia,serif}.connection summary small{display:inline-block;margin-right:10px}.finding-pair section{padding:13px;background:#f2f6f2;border-radius:7px}
+@media(max-width:700px){.mission-buttons,.finding-pair{grid-template-columns:1fr}}
