@@ -1,12 +1,19 @@
+import { appOrigin } from "../lib/app-origin";
 import { verifyAccessToken } from "../app/access-auth";
 import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
+import { catalogTick } from "../research/catalog/catalog";
+
 const worker = {
+  async scheduled(_event: ScheduledController, env: Cloudflare.Env, ctx: ExecutionContext) {
+    if (env.ATLAS_BACKGROUND_INGESTION !== "enabled" || !env.DB) return;
+    ctx.waitUntil(catalogTick(env.DB).then(result => { console.log("gene-catalog", JSON.stringify(result)); }).catch(() => { console.error("gene-catalog tick failed; checkpoint retained"); }));
+  },
   async fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const url = new URL(request.url);
-    if (env.ATLAS_AUTH_MODE === "access" && url.hostname === "isletatlas.org" &&
+    if (env.ATLAS_AUTH_MODE === "access" && url.origin === appOrigin(env.ATLAS_APP_ORIGIN) &&
         request.method === "GET" && url.pathname === "/atlas-sign-in") {
       const token = request.headers.get("Cf-Access-Jwt-Assertion") ??
         request.headers.get("cookie")?.match(/(?:^|;\s*)CF_Authorization=([^;]+)/)?.[1];
@@ -21,7 +28,7 @@ const worker = {
         "Set-Cookie": "__Host-atlas-session=" + token + "; Path=/; Secure; HttpOnly; SameSite=Lax",
       } });
     }
-    if (env.ATLAS_AUTH_MODE === "access" && url.hostname === "isletatlas.org" &&
+    if (env.ATLAS_AUTH_MODE === "access" && url.origin === appOrigin(env.ATLAS_APP_ORIGIN) &&
         request.method === "GET" && url.pathname === "/atlas-sign-out") {
       return new Response(null, { status: 303, headers: {
         Location: "/cdn-cgi/access/logout", "Cache-Control": "no-store",

@@ -1,5 +1,6 @@
 declare namespace Cloudflare {
   interface Env {
+    ATLAS_APP_ORIGIN?: string;
     ATLAS_AUTH_MODE?: "public" | "access";
     ATLAS_ACCESS_ISSUER?: string;
     ATLAS_ACCESS_AUDIENCE?: string;
@@ -7,6 +8,7 @@ declare namespace Cloudflare {
     OPENAI_API_KEY?: string;
     ATLAS_AI_OWNER_ID?: string;
     DB?: D1Database;
+    ATLAS_BACKGROUND_INGESTION?: "enabled" | "disabled";
     BUCKET?: R2Bucket;
   }
 }

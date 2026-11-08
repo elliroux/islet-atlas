@@ -2,7 +2,7 @@
 
 An open-source research workspace for people investigating the causes, progression and treatment of type 1 diabetes. Families, scientists and developers in the #WeAreNotWaiting community are invited to run a copy, correct evidence and extend the project. This is an independent project.
 
-[Public workspace](https://islet-evidence-atlas.mattepaste.chatgpt.site) · [Contribution guide](CONTRIBUTING.md)
+[Independent application](https://isletatlas.org) · [Contribution guide](CONTRIBUTING.md)
 
 ## Run locally
 
@@ -17,9 +17,15 @@ Open the loopback address printed by the dev server. Browsing, public searches, 
 
 See [Cloudflare deployment and migration status](CLOUDFLARE.md) for the standalone build, database setup, and remaining migration steps.
 
+## Phase 2 evidence foundation
+
+See the [architecture audit](docs/ARCHITECTURE_AUDIT.md), [evidence architecture and contributor contract](docs/UNIFIED_EVIDENCE.md), [preservation/migration procedure](docs/MIGRATION.md), [validation report](docs/VALIDATION.md), and [implemented versus remaining work](docs/PHASE_2_STATUS.md). Connected investigations now persist eligible source-linked metadata and expose deterministic candidate questions from D1. Source assertions stay unreviewed; hypotheses are not clinical conclusions. The legacy ChatGPT-hosted site remains a migration source only.
+
+Run `pnpm test` and `pnpm check` using Node 24 and Python 3.12+ for the deterministic checks. Production deployment and migration require explicit approval.
+
 ## Optional integrations
 
-The [connected research workspace](https://islet-evidence-atlas.mattepaste.chatgpt.site/connections) links PanKgraph, NCATS Translator/ARAX, Europe PMC and ClinicalTrials.gov in a bounded gene-to-drug-to-evidence workflow. No model key is required. Source provenance, query logs, device snapshots and JSON exports are included. See [connector architecture and contribution instructions](research/connectors/README.md) for verified interfaces, tests and current limitations.
+The [connected research workspace](https://isletatlas.org/connections) links PanKgraph, NCATS Translator/ARAX, Europe PMC and ClinicalTrials.gov in a bounded gene-to-drug-to-evidence workflow. No model key is required. Source provenance, query logs, device snapshots and JSON exports are included. See [connector architecture and contribution instructions](research/connectors/README.md) for verified interfaces, tests and current limitations.
 
 The Worker uses vinext, React and Cloudflare D1. For notebook synchronization, bind your own D1 database as DB and apply drizzle/0000_swift_phalanx.sql. The notebook API scopes records by authenticated user. Local drafts also persist in the browser. For a shared deployment, use a trusted identity gateway that strips incoming identity headers and inserts verified identities, or replace app/chatgpt-auth.ts before enabling notebook sync.
 
@@ -32,3 +38,6 @@ research/corpus.json contains curated records, findings and study families. rese
 ## License
 
 Original Islet Atlas code and original evidence annotations are available under Apache License 2.0 (LICENSE). Dependencies and bundled third-party components retain their respective licenses and notices. Source publications, quoted material and linked datasets remain subject to their own terms. This release contains no participant-level cohort files, notebooks, hosting credentials or private Git history.
+
+
+Browse source-reported T1D genes without typing a symbol; inspect catalog coverage, source dates and bounded background updates. See [Gene catalog](docs/GENE_CATALOG.md).

@@ -15,6 +15,20 @@
       "when": 1794016068133,
       "tag": "0001_lovely_medusa",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794113804365,
+      "tag": "0002_unified_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794115301364,
+      "tag": "0003_gene_catalog",
+      "breakpoints": true
     }
   ]
 }

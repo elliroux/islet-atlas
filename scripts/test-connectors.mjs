@@ -41,6 +41,8 @@ try{
   return Response.json({studies:[]});
  };
  const partial=await investigateConnections('IL2RA',undefined,fake);assert.equal(partial.evidence.length,1);assert(partial.queries.some(q=>q.provider.includes('Translator')&&q.status==='unavailable'));assert(partial.queries.some(q=>q.provider==='ClinicalTrials.gov'&&q.status==='empty'));
+ let calls=0;assert.deepEqual(await requestJson('https://example.org',{},async()=>++calls===1?new Response('',{status:503}):Response.json({ok:true})),{ok:true});assert.equal(calls,2);
+ await assert.rejects(()=>requestJson('https://example.org',{},async()=>{throw new DOMException('Timed out','TimeoutError')}),/Timed out/);
  await assert.rejects(()=>requestJson('https://example.org',{},async()=>new Response('x'.repeat(12_000_001))),/size limit/);
  console.log('Connector tests passed: provenance, direction, deduplication, invalid input, schema drift, response bounds, partial and total outages.');
  if(process.argv.includes('--live')){

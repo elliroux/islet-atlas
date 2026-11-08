@@ -14,8 +14,8 @@ export default async function RootLayout({children}:Readonly<{children:React.Rea
  const user = accessEnabled ? await getChatGPTUser() : null;
  return <html lang="en"><body>
   {accessEnabled && <nav aria-label="Account" className="flex justify-end gap-3 px-4 py-2 text-sm">
-   {user ? <><span>{user.displayName}</span><a href="https://isletatlas.org/atlas-sign-out">Sign out</a></>
-    : <a href="https://isletatlas.org/atlas-sign-in">Sign in</a>}
+   {user ? <><span>{user.displayName}</span><a href="/atlas-sign-out">Sign out</a></>
+    : <a href="/atlas-sign-in">Sign in</a>}
   </nav>}
   <AtlasShell>{children}</AtlasShell>
  </body></html>
