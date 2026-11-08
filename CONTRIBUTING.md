@@ -15,3 +15,7 @@ Work on a branch in your fork. Explain the user-facing change and how to reprodu
 - Check a source locator or flag overlapping participants in a study family.
 - Add a second cross-cohort comparison using public aggregate results and uncertainty intervals.
 - Improve screen-reader access, keyboard navigation or small-screen comparison tables.
+
+## Evidence and connectors
+
+Start with [the architecture audit](docs/ARCHITECTURE_AUDIT.md) and [the tested connector/persistence contract](docs/UNIFIED_EVIDENCE.md). Changes target the independent Cloudflare app. Add deterministic provider fixtures and preserve original IDs, direction, provenance, limitations and licensing. Keep source assertions and hypotheses separate; never count aggregators as independent studies. Run `pnpm test`, `pnpm check` and `pnpm build:cloudflare` before opening a PR. Use a feature branch targeting main; merging main may deploy and requires owner approval. Keep database exports, notebooks, credentials and provider raw dumps outside Git.

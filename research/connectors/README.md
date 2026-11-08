@@ -14,7 +14,7 @@ New connectors should return source identifiers, exact queries, retrieval dates,
 
 ## Persistence and reproducibility
 
-Users can save five snapshots on their device and export JSON containing the displayed evidence, relationships and exact query log. Successful runs may be reused for five minutes within one server isolate; original retrieval timestamps are retained. Four concurrent distinct runs are allowed per isolate. These are modest load controls, not a global rate limiter. These runs are not yet synchronized to the server notebook or permanently ingested into the research collection. Results may change when queries are rerun; exports preserve the retrieved snapshot, not full upstream databases. The interface makes source reuse terms explicit; an accessible API is not a blanket redistribution license.
+Users can save five snapshots on their device and export JSON containing the displayed evidence, relationships and exact query log. Successful runs may be reused for five minutes within one server isolate; original retrieval timestamps are retained. Four concurrent distinct runs are allowed per isolate. These are modest load controls, not a global rate limiter. On the independent Cloudflare app, eligible metadata is now atomically ingested into the evidence graph. Source assertions remain unreviewed and ambiguous identifiers are quarantined. Saved graph retrieval does not contact providers; device snapshots and private notebooks remain separate. See [the evidence contract](../../docs/UNIFIED_EVIDENCE.md). Results may change when queries are rerun; exports preserve the retrieved snapshot, not full upstream databases. The interface makes source reuse terms explicit; an accessible API is not a blanket redistribution license.
 
 ## Verified interfaces
 
@@ -29,3 +29,7 @@ No new credentials or model key are needed. Existing research import automation 
 ## Deliberate limitations
 
 Entering HLA displays an explicit family explanation and HLA-DQA1/HLA-DQB1/HLA-DRB1 choices; it does not silently substitute a gene. Unresolved genes produce a visible resolution notice and a skipped Translator log. Alleles/haplotypes are not resolved. Single-gene exploration does not discover every T1D pathway. Results use provider ordering and bounded name searches, without exhaustive synonym expansion. No automatic claim-level contradiction extraction, study-family deduplication, approval verification, safety evaluation or causal inference is performed. Human review is required to establish the gene's relevance, drug effect direction, human evidence and testable next steps. Linked Discoveries and MAI-T1D are not connected by this release. Future integrations must verify documented access and reuse terms first.
+
+## Phase 2 changes
+
+PanKgraph keeps source/destination identifiers and categories; KEGG `hsa_` IDs normalize to stable CURIEs. Translator edges must match both result-bound endpoints, and statistical associations are distinct from computational predictions. Requests have one transient retry within a shared 45-second deadline. Stable source identity, retrieval history, review state, and metadata retention policy are required before new connectors enter persistence. Run `pnpm test` for ingestion/discovery/migration/security/accessibility checks; default CI has no live provider dependency.

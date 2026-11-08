@@ -43,3 +43,7 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
+# Python test and migration bytecode
+__pycache__/
+*.pyc

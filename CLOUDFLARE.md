@@ -1,3 +1,7 @@
+# Production preparation: isletatlas.org
+
+**Do not merge, apply remote migrations, or deploy without explicit owner approval.** Main is connected to production Workers Builds. This feature branch is for review/staging only. The legacy ChatGPT-hosted site is a research source, never a deployment target for new features.
+
 # Independent Cloudflare deployment
 
 This configuration deploys the public application into the owner's Cloudflare account. The existing ChatGPT-hosted site remains available during migration.
@@ -28,7 +32,7 @@ The DB binding points to `islet-atlas-db`, ID `5d965dbc-66fd-422e-a5b7-594788a26
 - Public literature exploration and device-local notebooks do not require ChatGPT sign-in.
 - `ATLAS_AUTH_MODE=public` intentionally disables gateway-based account sync and maintainer AI access on this deployment. A verified independent identity provider must be installed before enabling those functions. Never enable the old header-only identity method on a directly accessible Worker.
 - Existing browser notebooks belong to the old origin: export JSON there before switching. They do not automatically appear on a new domain.
-- Accumulated database records, import checkpoints, and scheduled updates still need migration. The existing research-update automation continues to target the old site until explicitly switched after verification.
+- The live audit found 16,136 publications already in independent D1 versus 26,027 in legacy, plus matching counts of 4,682 trials and 26 findings. Complete record-level parity, import checkpoints, and scheduled update cutover still need verification/migration. The existing research-update automation continues to target the old site until explicitly switched after verification.
 - ChatGPT service credentials do not belong in this Cloudflare account. AI credentials and budgets must be configured separately after independent authentication is ready.
 
 ## Local validation
@@ -63,3 +67,9 @@ Keep `OPENAI_API_KEY` as a Worker secret. Verify signed-out investigations use
 the curated guide and owner investigations report model-assisted output. Test
 the notebook before enabling other accounts. Independent identities use an
 `access:` namespace, so existing ChatGPT notebooks are separate.
+
+## Unified evidence deployment gate
+
+Read [migration and rollback instructions](docs/MIGRATION.md) and [current limitations](docs/PHASE_2_STATUS.md). Migration 0002 adds evidence tables and a history trigger without resetting existing data. Apply and verify it first in an independent staging D1 with its own config/database ID. Never use the production ID for a staging remote command. `pnpm test` covers atomic batches and resumable migration; `pnpm build:cloudflare` and Wrangler `--dry-run` do not publish. The GitHub Actions workflow only tests/builds locally.
+
+After approval, deploy through the existing Cloudflare pipeline, check `/api/evidence?coverage=1`, run a bounded investigation, verify its `persistence.status`, reload `/connections?gene=IL2RA`, and verify notebook authorization. Keep the prior Worker version and verified backup available. If the graph fails, roll back the Worker code while retaining additive tables and research archives. Do not activate the new automation target until actual migration parity passes.

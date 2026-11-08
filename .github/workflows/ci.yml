@@ -1,0 +1,30 @@
+name: Research foundation checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+      WRANGLER_LOG_PATH: .sites-runtime/wrangler/logs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm test
+      - run: pnpm run build:cloudflare
+      - run: pnpm exec wrangler d1 migrations apply islet-atlas-db --local --config wrangler.jsonc
+      - run: pnpm exec wrangler deploy --dry-run --config dist/server/wrangler.json
+# No deployment, credentials, live provider dependency, or research automation cutover.
