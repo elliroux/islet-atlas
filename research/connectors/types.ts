@@ -2,14 +2,25 @@ export type QueryLog = {provider:string;endpoint:string;request:unknown;retrieve
 export type GraphLink = {id:string;subject:string;predicate:string;object:string;kind:"Graph association"|"Provider assertion"|"Computational inference";properties:Record<string,unknown>;sources:string[];publications:string[];urls:string[]};
 export type Candidate = {id:string;name:string;links:GraphLink[]};
 export type EvidenceRecord = {id:string;title:string;url:string;provider:string;kind:"Publication"|"Trial registration";year:string;publicationTypes?:string[];status?:string;whyStopped?:string;population?:string;phase?:string;conditions?:string[];hasResults?:boolean;linkedPublications?:string[]};
-export type ConnectedRun = {version:1;id:string;date:string;gene:string;geneId?:string;resolution?:string;geneOptions?:string[];candidate?:string;question:string;links:GraphLink[];candidates:Candidate[];evidence:EvidenceRecord[];queries:QueryLog[];gaps:string[]};
+export type ConnectedRun = {version:1;id:string;date:string;gene:string;geneId?:string;resolution?:string;geneOptions?:string[];candidate?:string;question:string;links:GraphLink[];candidates:Candidate[];evidence:EvidenceRecord[];queries:QueryLog[];gaps:string[];persistence?:{status:"saved"|"unavailable";assertions?:number;quarantined?:number;notice:string}};
 export type Fetcher=typeof fetch;
 export function safeUrl(value:unknown):string|undefined {if(typeof value!=="string")return;try{const u=new URL(value);if(u.protocol==="https:"||u.protocol==="http:")return u.href}catch{}}
 export function text(value:unknown,max=600):string{return typeof value==="string"?value.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().slice(0,max):""}
 export function strings(value:unknown):string[]{return Array.isArray(value)?value.filter((v):v is string=>typeof v==="string"):typeof value==="string"?[value]:[]}
 export async function requestJson(url:string,init:RequestInit={},fetcher:Fetcher=fetch):Promise<any>{
- const r=await fetcher(url,{...init,signal:AbortSignal.timeout(45000),headers:{Accept:"application/json","Content-Type":"application/json",...init.headers}});
- if(!r.ok)throw Error("Provider returned HTTP "+r.status);
+ const signal=AbortSignal.timeout(45000);
+ let r:Response|undefined;
+ // One transient retry within the same total deadline. Never retry parsing/size/validation errors.
+ for(let attempt=0;attempt<2;attempt++) {
+  try { r=await fetcher(url,{...init,signal,headers:{Accept:"application/json","Content-Type":"application/json",...init.headers}}); }
+  catch(error) { if(attempt||signal.aborted||(error instanceof DOMException&&error.name==="TimeoutError"))throw error; }
+  if(r?.ok)break;
+  if(r && ![429,502,503,504].includes(r.status))throw Error("Provider returned HTTP "+r.status);
+  if(attempt)throw Error("Provider returned HTTP "+r?.status);
+  await r?.body?.cancel().catch(()=>{});
+  await new Promise(resolve=>setTimeout(resolve,200));
+ }
+ if(!r)throw Error("Provider unavailable");
  // Bound provider payloads before parsing, including streamed responses without Content-Length.
  const reader=r.body?.getReader();if(!reader)throw Error("Empty provider response");
  const chunks:Uint8Array[]=[];let size=0;
