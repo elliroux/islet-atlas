@@ -65,7 +65,7 @@ export default function TrajectoryResearchDesign() {
   return <main className="atlas-page trajectories-page">
     <div className="tr-document-heading">
       <a href="/trajectories">← Back to the interactive design preview</a>
-      <p className="atlas-kicker">Complete specification · Design version 1 · November 8, 2026</p>
+      <p className="atlas-kicker">Complete specification · Design version 1.1 · November 8, 2026</p>
       <h1>Islet Atlas Trajectories Research Design</h1>
       <div className="tr-actions"><a className="tr-button" href="/trajectories/research-design.md" download>Download the specification (.md)</a><a className="tr-button" href="/trajectories#tr-feedback-title">Suggest an improvement</a></div>
     </div>

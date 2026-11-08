@@ -39,7 +39,7 @@ export default function TrajectoriesPage() {
           <a className="tr-button" href="/trajectories/design">Read the research design</a>
           <ShareDesign />
         </div>
-        <p className="tr-version">Design version 1 · November 8, 2026 · Open for feedback</p>
+        <p className="tr-version">Design version 1.1 · November 8, 2026 · Open for feedback</p>
       </section>
 
       <section className="tr-context" aria-labelledby="tr-context-title">

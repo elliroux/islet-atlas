@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import "./trajectory-explorer.css";
 
 type SignalId = "ifn" | "mono" | "nk";
-type DiseaseWindow = "before" | "stage2" | "after";
+type DiseaseWindow = "before" | "stage1" | "stage2" | "after";
 type EvidenceView = "evidence" | "influence" | "study";
 
 type Selection = {
@@ -38,6 +38,18 @@ const SOURCES = {
     label: "BANDIT follow-up · 2026",
     href: "https://pubmed.ncbi.nlm.nih.gov/42627334/",
   },
+  staging: {
+    label: "Staging and monitoring consensus · 2024",
+    href: "https://pubmed.ncbi.nlm.nih.gov/38912694/",
+  },
+  abatacept: {
+    label: "Stage 1 abatacept trial · 2023",
+    href: "https://pubmed.ncbi.nlm.nih.gov/36920087/",
+  },
+  abataceptUpdate: {
+    label: "Exploratory subgroup analysis · 2026",
+    href: "https://pubmed.ncbi.nlm.nih.gov/41237315/",
+  },
 } as const;
 
 type SourceId = keyof typeof SOURCES;
@@ -50,6 +62,7 @@ type Signal = {
   observed: string;
   limit: string;
   hypothesis: string;
+  stage1Hypothesis: string;
   sources: readonly SourceId[];
   timing: string;
   replication: string;
@@ -75,6 +88,8 @@ const SIGNALS: Record<SignalId, Signal> = {
       "TEDDY found no progression-rate association in 2021; an infection-aligned 2023 analysis found stronger antiviral responses in controls. The signatures and windows differ.",
     hypothesis:
       "Proposed: does unusually slow resolution after an infection distinguish future seroconverters from matched non-converters?",
+    stage1Hypothesis:
+      "Proposed: among people with stage 1 T1D, do persistent or poorly resolved interferon responses precede dysglycemia?",
     sources: ["baby", "teddy", "infection"],
     timing: "Observed before antibodies",
     replication: "Endpoint-dependent findings",
@@ -83,6 +98,8 @@ const SIGNALS: Record<SignalId, Signal> = {
     windows: {
       before:
         "Timing fits this question. Reliable person-level prediction remains to be tested.",
+      stage1:
+        "Occurrence before autoantibodies does not establish prediction after stage 1 begins. Validate the signal in people with multiple confirmed autoantibodies and normal glucose.",
       stage2:
         "Earlier occurrence does not establish prediction of stage 2 progression.",
       after:
@@ -106,6 +123,8 @@ const SIGNALS: Record<SignalId, Signal> = {
       "Support across assays in the same participants is not independent-cohort replication.",
     hypothesis:
       "Proposed: distinguish more monocytes from altered regulation within monocytes, then test the reproducible component.",
+    stage1Hypothesis:
+      "Proposed: do changes within monocytes, rather than cell abundance alone, distinguish stable stage 1 from progression to dysglycemia?",
     sources: ["trigr"],
     timing: "Observed before antibodies",
     replication: "Independent cohort still needed",
@@ -114,6 +133,8 @@ const SIGNALS: Record<SignalId, Signal> = {
     windows: {
       before:
         "Early timing fits. Disease-onset time and first detectable antibodies remain different events.",
+      stage1:
+        "Pre-autoantibody monocyte findings need separate validation during stage 1. Keep cell abundance and within-cell activity distinct.",
       stage2:
         "Early monocyte findings do not automatically transfer to stage 2.",
       after: "An early-life difference may have a different role after diagnosis.",
@@ -136,6 +157,8 @@ const SIGNALS: Record<SignalId, Signal> = {
       "Validation of a selected signature does not validate every linked pathway or establish a causal role.",
     hypothesis:
       "Proposed: determine when this program adds predictive information. Future antibody subtype cannot be used as a pre-antibody predictor.",
+    stage1Hypothesis:
+      "Proposed: does an NK-associated trajectory add predictive information during stage 1 beyond antibody history and current metabolic measurements?",
     sources: ["teddy"],
     timing: "Timing depends on subgroup",
     replication: "Selected signal tested in DIPP",
@@ -144,6 +167,8 @@ const SIGNALS: Record<SignalId, Signal> = {
     windows: {
       before:
         "Keep pre-seroconversion analyses separate from later progression analyses.",
+      stage1:
+        "Autoantibody-defined progression findings may inform this question, but the selected signature needs validation in a specifically staged, normoglycemic population.",
       stage2:
         "Progression relevance needs validation in the exact stage 2 population.",
       after:
@@ -162,29 +187,40 @@ const DISEASE_WINDOWS: readonly {
   id: DiseaseWindow;
   label: string;
   question: string;
+  description: string;
 }[] = [
   {
     id: "before",
     label: "Before autoantibodies",
     question: "What changes before detectable autoimmunity?",
+    description: "No previously confirmed islet autoantibodies. The first outcome is persistent, confirmed autoantibody detection.",
+  },
+  {
+    id: "stage1",
+    label: "Stage 1 progression",
+    question: "What predicts progression from stage 1?",
+    description: "Two or more confirmed islet autoantibodies, with glucose still in the normal range. This is early-stage T1D, even without symptoms.",
   },
   {
     id: "stage2",
     label: "Stage 2 progression",
     question: "What predicts progression from stage 2?",
+    description: "Two or more confirmed islet autoantibodies, with abnormal glucose levels below stage 3 diagnostic thresholds. The outcome here is progression to stage 3.",
   },
   {
     id: "after",
-    label: "After diagnosis",
-    question: "What can preserve function after diagnosis?",
+    label: "Stage 3 outcomes",
+    question: "What can preserve function in stage 3?",
+    description: "Clinical T1D (stage 3). The question shifts to preserving beta-cell function and improving meaningful clinical outcomes.",
   },
 ];
 
 const DISEASE_PHASES = [
-  { id: "before", label: "Before antibodies" },
-  { id: "stage1", label: "Single or multiple antibodies" },
-  { id: "stage2", label: "Stage 2" },
-  { id: "after", label: "Stage 3" },
+  { id: "before", label: "Before antibodies", detail: "No confirmed antibodies" },
+  { id: "single", label: "Single antibody", detail: "Not stage 1" },
+  { id: "stage1", label: "Stage 1", detail: "Normal glucose" },
+  { id: "stage2", label: "Stage 2", detail: "Abnormal glucose" },
+  { id: "after", label: "Stage 3", detail: "Clinical T1D" },
 ] as const;
 
 const EVIDENCE_VIEWS: readonly {
@@ -220,6 +256,13 @@ const INTERVENTIONS: Record<DiseaseWindow, InterventionContext> = {
       "A drug affecting a related pathway is not yet a supported treatment connection.",
     sources: ["label", "bandit"],
   },
+  stage1: {
+    heading: "Stage 1 trial: abatacept",
+    body: "In selected relatives with stage 1, 12 months of abatacept did not significantly delay the original trial's overall progression endpoint: abnormal glucose tolerance or stage 3 T1D. Immune and insulin-secretion measures changed.",
+    limit:
+      "An exploratory reanalysis of the same trial suggested a benefit in a subgroup defined by baseline insulin secretion; independent validation is needed. Neither result establishes that the selected RNA signal identifies responders. Teplizumab's stage 2 evidence does not establish benefit in stage 1.",
+    sources: ["abatacept", "abataceptUpdate", "label"],
+  },
   stage2: {
     heading: "Stage-matched example: teplizumab",
     body: "FDA labeling includes delaying stage 3 in eligible people with stage 2 T1D.",
@@ -244,6 +287,18 @@ type ProposedStudy = {
 };
 
 function proposedStudy(signal: Signal, stage: DiseaseWindow): ProposedStudy {
+  if (stage === "stage1") {
+    return {
+      question: signal.stage1Hypothesis.replace(/^Proposed: /, ""),
+      comparison:
+        "Age, antibody history, and available metabolic information plus the latest RNA measurement, versus the same model plus predefined trajectory features. Use only information available at each stage 1 visit.",
+      outcome:
+        "Primary: progression from confirmed stage 1 to stage 2 dysglycemia. Analyze progression to stage 3 separately, using prespecified criteria and prediction horizons.",
+      falsifier:
+        "Trajectory features add no useful prediction beyond current RNA and established risk information in an independent stage 1 cohort, or the apparent gain depends on future glucose measurements.",
+    };
+  }
+
   if (stage === "stage2") {
     return {
       question:
@@ -377,6 +432,13 @@ export default function TrajectoryExplorer() {
                 </button>
               ))}
             </div>
+            <p className="ia-window-context">
+              {selectedWindow.description}{" "}
+              <a href={SOURCES.staging.href} target="_blank" rel="noopener noreferrer">
+                Staging definitions<span aria-hidden="true"> ↗</span>
+                <span className="ia-sr"> (opens in a new tab)</span>
+              </a>
+            </p>
           </div>
         </div>
 
@@ -444,6 +506,7 @@ export default function TrajectoryExplorer() {
                     aria-current={isActive ? "step" : undefined}
                   >
                     <b>{phase.label}</b>
+                    <span className="ia-phase-detail">{phase.detail}</span>
                     <em>{isActive ? "Selected window" : ""}</em>
                   </li>
                 );
@@ -496,7 +559,7 @@ export default function TrajectoryExplorer() {
               </dl>
               <div className="ia-open-question">
                 <h4>Connection to test</h4>
-                <p>{signal.hypothesis}</p>
+                <p>{selection.stage === "stage1" ? signal.stage1Hypothesis : signal.hypothesis}</p>
               </div>
               <SourceLinks
                 sources={signal.sources}

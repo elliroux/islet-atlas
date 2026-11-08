@@ -1,6 +1,6 @@
 # Islet Atlas Trajectories — Research Design
 
-Public design preview · November 8, 2026
+Public design preview · Design version 1.1 · November 8, 2026
 
 Islet Atlas Trajectories is a proposed research workspace for investigating which molecular changes precede detectable T1D-related autoimmunity, whether those changes improve prediction, and what evidence supports influencing the underlying process.
 
@@ -35,7 +35,7 @@ The main workspace has four connected views.
 | Influence | Examine a specified intervention in a specified setting | Target engagement, clinical outcomes, harms, and durability shown separately |
 | Next study | Turn an unresolved connection into an executable research question | Population, measurements, endpoint, comparator, analysis, falsifier, and data requirements |
 
-The initial interface concept provides three published signal examples: interferon response, monocyte state, and an NK-cell-associated program. Users can change the question window and inspect supporting observations, limiting evidence, and a proposed next study. The intervention examples demonstrate how changing the window changes the relevance of treatment evidence.
+The initial interface concept provides three published signal examples: interferon response, monocyte state, and an NK-cell-associated program. Its four question windows are before autoantibodies, stage 1 progression, stage 2 progression, and stage 3 outcomes. Users can inspect supporting observations, limiting evidence, and a proposed next study. The timeline shows single-autoantibody positivity separately from stage 1. The intervention examples demonstrate how changing the window changes the relevance of treatment evidence.
 
 A full implementation would add saved questions, a plain-language explanation toggle, evidence comparisons, downloadable reproducibility bundles, and a data-availability view. Those features should reuse one underlying evidence model so that simplified wording does not hide scientific qualifications.
 
@@ -47,11 +47,12 @@ Every result should answer: **Why is this connection here? What would weaken it?
 | --- | --- | --- |
 | First detectable autoimmunity | No previously confirmed islet autoantibodies | First persistent confirmed autoantibody positivity |
 | Autoantibody spreading | Confirmed single autoantibody | Confirmed multiple autoantibodies |
-| Metabolic progression | Multiple autoantibodies and normoglycemia | Dysglycemia under the specified stage 2 criteria |
-| Clinical progression | A specified stage 1 or stage 2 population | Stage 3 under the study diagnostic criteria |
-| Preservation after diagnosis | Diagnosed T1D with characterized remaining function | Beta-cell function and clinical outcomes over time |
+| Stage 1 to stage 2 | Confirmed multiple autoantibodies and normoglycemia (stage 1) | Dysglycemia under the specified stage 2 criteria |
+| Stage 1 to stage 3 | Confirmed stage 1 | Stage 3 under the study diagnostic criteria, analyzed separately from stage 2 onset |
+| Stage 2 to stage 3 | Confirmed stage 2 | Stage 3 under the study diagnostic criteria |
+| Preservation in stage 3 | Clinical T1D with characterized remaining function | Beta-cell function and clinical outcomes over time |
 
-Single-autoantibody positivity must not be relabeled stage 1. Confirmation and stage definitions should follow the study protocol, with any harmonized endpoint stored separately. The [2024 monitoring consensus](https://pubmed.ncbi.nlm.nih.gov/38912694/) distinguishes single from multiple autoantibody positivity and calls for confirmation using another sample.
+Stage 1 is early-stage T1D: two or more confirmed islet autoantibodies with normoglycemia, usually without symptoms. Single-autoantibody positivity must not be relabeled stage 1. Stage 2 adds dysglycemia below stage 3 diagnostic thresholds. Confirmation and stage definitions should follow the study protocol, with any harmonized endpoint stored separately. The [2024 monitoring consensus](https://pubmed.ncbi.nlm.nih.gov/38912694/) distinguishes these states and calls for antibody confirmation using another sample.
 
 Store the last qualifying negative sample, first qualifying positive sample, and confirmation sample separately. The transition is observed within the interval after the last negative and through the first positive. The confirmation date establishes persistence according to the protocol; it is not the exact biological onset date.
 
@@ -133,6 +134,8 @@ There should be no universal “safe to influence” badge. The unit of evaluati
 
 The [June 2026 FDA teplizumab label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2026/761183s010lbls014lbl.pdf) includes a stage 2 indication for delaying stage 3, and a separate accelerated-approval indication in recently diagnosed stage 3 children. It also includes serious viral-reactivation warnings. Those records demonstrate why indication, endpoint, label version, and harms must travel together. They do not establish pre-autoantibody prevention.
 
+The [original stage 1 abatacept trial](https://pubmed.ncbi.nlm.nih.gov/36920087/) enrolled selected relatives with multiple confirmed antibodies and normal glucose tolerance. Twelve months of treatment did not significantly delay its overall primary endpoint of abnormal glucose tolerance or stage 3 T1D, despite effects on immune and insulin-secretion measures. A [later exploratory analysis](https://pubmed.ncbi.nlm.nih.gov/41237315/) suggested benefit in a subgroup defined by baseline insulin secretion. This was a reanalysis of the same trial, not independent replication; further validation is needed. Neither result establishes treatment selection using the displayed RNA signals. Preserve the trial eligibility, composite endpoint, exposure, and harms rather than labeling the entire approach ineffective.
+
 The [2026 BANDIT follow-up](https://pubmed.ncbi.nlm.nih.gov/42627334/) reported waning baricitinib benefits after stopping treatment. Preserve treatment exposure and post-treatment outcomes separately; a lasting molecular or clinical effect must be demonstrated.
 
 The [TRIGR feeding trial](https://jamanetwork.com/journals/jama/fullarticle/2667723) did not demonstrate reduced T1D incidence from the tested hydrolyzed-formula intervention. Practical modifiability and plausible biology do not establish prevention.
@@ -199,6 +202,12 @@ The decisive comparison is model 3 against model 2. Otherwise an apparent improv
 Use frozen feature definitions, training procedures, and analysis code for external validation. Prespecify required improvement and tolerable false-alert burden after the endpoint prevalence and intended research action are known. Do not invent a success threshold or a performance result.
 
 A separate benchmark can reproduce an existing clinical-progression analysis. Label it by its actual outcome; predicting diagnosis is not equivalent to predicting first autoantibody appearance.
+
+## Stage 1 progression benchmark
+
+Start with confirmed stage 1: at least two islet autoantibodies and normal glucose under the specified protocol. Ask whether a molecular trajectory adds useful information beyond the latest RNA measurement, age, antibody history, and available metabolic measurements. Use only information available at the prediction visit.
+
+Prespecify progression to stage 2 dysglycemia as one endpoint and progression to stage 3 as a separate endpoint, with their own event definitions, horizons, and interval censoring. Validate in an independent stage 1 cohort. A pre-autoantibody association, a mixed-stage progression cohort, or a later glucose result cannot substitute for that validation.
 
 # Validation that makes the result credible
 

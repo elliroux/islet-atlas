@@ -118,6 +118,13 @@
   gap: 5px;
 }
 
+.trajectory-explorer .ia-window-context {
+  max-width: 760px;
+  margin-top: 10px;
+  color: var(--ia-muted);
+  font-size: 13px;
+}
+
 .trajectory-explorer .ia-stage {
   min-height: 40px;
   margin: 0;
@@ -228,7 +235,7 @@
 
 .trajectory-explorer .ia-lane {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 5px;
   margin: 0;
   padding: 0 20px 16px;
@@ -260,6 +267,11 @@
   margin-top: 3px;
   color: var(--ia-brand);
   font-style: normal;
+}
+
+.trajectory-explorer .ia-phase-detail {
+  display: block;
+  margin-top: 3px;
 }
 
 .trajectory-explorer .ia-tabs {
@@ -494,7 +506,25 @@
   }
 
   .trajectory-explorer .ia-lane {
+    grid-template-columns: 1fr;
     padding: 0 16px 16px;
+  }
+
+  .trajectory-explorer .ia-phase {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0 8px;
+    padding: 6px 0 6px 9px;
+    border-top: 0;
+    border-left: 3px solid var(--ia-line);
+  }
+
+  .trajectory-explorer .ia-phase-detail {
+    margin-top: 0;
+  }
+
+  .trajectory-explorer .ia-phase em {
+    grid-column: 1 / -1;
   }
 
   .trajectory-explorer .ia-head-row {
