@@ -1,5 +1,6 @@
 declare namespace Cloudflare {
   interface Env {
+    ATLAS_APP_ORIGIN?: string;
     ATLAS_AUTH_MODE?: "public" | "access";
     ATLAS_ACCESS_ISSUER?: string;
     ATLAS_ACCESS_AUDIENCE?: string;

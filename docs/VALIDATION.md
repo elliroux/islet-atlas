@@ -49,3 +49,7 @@ The synthetic migration rehearsal confirms mechanics, preservation, hashes, inde
 - Local browser selection of CFTR without typing retrieved 160 persisted relationships and 11 literature/registry matches, plus candidate research prompts. Keyboard selection transferred focus to the investigation. Catalog pagination, source/update display and 390px mobile overflow were checked. Only five genes were enriched in this bounded live test; enrichment of the whole catalog and primary-source coverage expansion remain future operations.
 - The pinned Wrangler asset router returned a local scheduled-simulation error. The committed local-only preview helper removes asset routing from its temporary config and successfully exercises the built Worker's scheduled handler and the same local D1. Production scheduled activation still requires staging verification.
 - No production database write, deployment, trigger activation, legacy schedule change or migration-parity claim was made.
+
+## Remote staging readiness follow-up
+
+See [STAGING_READINESS.md](STAGING_READINESS.md) for the verified production backup, real staging migration/content reconciliation, signed-in notebook persistence, scheduled ingestion and controlled throttling recovery. The final readiness suite passed 34 Node and 9 Python tests plus connector assertions. Production and legacy workflows remain unchanged.

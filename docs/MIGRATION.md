@@ -10,7 +10,7 @@
 4. Materialize trusted SQL exports in separate SQLite files, e.g. `sqlite3 work/backups/legacy.sqlite < work/backups/legacy.sql` and the same for `cloudflare-before.sqlite`. A SQL export is executable input: inspect that it came from the authorized database export, never a paper or arbitrary uploaded source. Record SHA-256 checksums and retain untouched originals.
 5. Use a **copy** of the destination SQLite export for rehearsal. Apply migration 0002 to the copy if absent. Do not reapply 0000/0001 to an existing schema. Do not reset either database or its import checkpoints.
 
-The source/destination complete exports were unavailable in this session. Therefore exact production ID reconciliation, backup integrity, archive parity and full migration remain unverified. Synthetic tests exercise the migration machinery but are not proof of real-data parity.
+The legacy source export remains unavailable. The independent production D1 backup and isolated staging schema rehearsal were completed on 2026-11-08; see STAGING_READINESS.md for exact counts, hashes and preservation results. Legacy-to-independent archive parity and full migration remain unverified. Synthetic migration tests are not proof of legacy parity.
 
 ## Plan, rehearse, resume, reconcile
 

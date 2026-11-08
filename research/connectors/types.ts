@@ -8,7 +8,7 @@ export function safeUrl(value:unknown):string|undefined {if(typeof value!=="stri
 export function text(value:unknown,max=600):string{return typeof value==="string"?value.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim().slice(0,max):""}
 export function strings(value:unknown):string[]{return Array.isArray(value)?value.filter((v):v is string=>typeof v==="string"):typeof value==="string"?[value]:[]}
 export async function requestJson(url:string,init:RequestInit={},fetcher:Fetcher=fetch):Promise<any>{
- const signal=AbortSignal.timeout(45000);
+ const deadline=Date.now()+45000,signal=AbortSignal.timeout(45000);
  let r:Response|undefined;
  // One transient retry within the same total deadline. Never retry parsing/size/validation errors.
  for(let attempt=0;attempt<2;attempt++) {
@@ -17,8 +17,14 @@ export async function requestJson(url:string,init:RequestInit={},fetcher:Fetcher
   if(r?.ok)break;
   if(r && ![429,502,503,504].includes(r.status))throw Error("Provider returned HTTP "+r.status);
   if(attempt)throw Error("Provider returned HTTP "+r?.status);
+  const retryAfter=r?.headers.get("Retry-After");
+  const retryMs=retryAfter ? (/^\d+$/.test(retryAfter.trim())?Number(retryAfter)*1000:Date.parse(retryAfter)-Date.now()) : 200;
+  const delay=Number.isFinite(retryMs)?Math.max(200,retryMs):200;
   await r?.body?.cancel().catch(()=>{});
-  await new Promise(resolve=>setTimeout(resolve,200));
+  // Never retry earlier than an upstream cooldown. Let the durable job retry later
+  // if the requested delay cannot fit this request's total deadline.
+  if(delay>=deadline-Date.now()-1000)throw Error("Provider cooldown exceeds request deadline; retry later.");
+  await new Promise(resolve=>setTimeout(resolve,delay));
  }
  if(!r)throw Error("Provider unavailable");
  // Bound provider payloads before parsing, including streamed responses without Content-Length.
@@ -30,5 +36,5 @@ export async function requestJson(url:string,init:RequestInit={},fetcher:Fetcher
 }
 export async function capture<T>(provider:string,endpoint:string,request:unknown,limit:number,fn:()=>Promise<T[]>,queries:QueryLog[]):Promise<T[]>{
  const log:QueryLog={provider,endpoint,request,retrievedAt:new Date().toISOString(),status:"complete",count:0,limit,note:"Bounded retrieval; no result is not evidence of absence."};
- try{const records=await fn();log.count=records.length;log.status=records.length?"complete":"empty";return records}catch(e){log.status="unavailable";log.note=e instanceof Error?e.message:"Provider unavailable";return []}finally{queries.push(log)}
+ try{const records=await fn();if(records.length>limit)throw Error("Provider exceeded requested record limit; response requires review.");log.count=records.length;log.status=records.length?"complete":"empty";return records}catch(e){log.status="unavailable";log.note=e instanceof Error?e.message:"Provider unavailable";return []}finally{queries.push(log)}
 }

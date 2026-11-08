@@ -76,3 +76,7 @@ After approval, deploy through the existing Cloudflare pipeline, check `/api/evi
 
 
 The gene catalog adds migration 0003 and an opt-in scheduled handler. No production Cron Trigger is configured. See [catalog staging, activation and rollback](docs/GENE_CATALOG.md); activation requires explicit owner approval.
+
+## Isolated staging and release rehearsal
+
+Use `scripts/prepare-staging.mjs` to generate an ignored staging-only config, and `ATLAS_STAGING_CONFIG=work/staging/wrangler.json pnpm build:cloudflare` to build against it. Always inspect the resulting Worker name, database binding and routes before deployment. See [staging readiness and rollback](docs/STAGING_READINESS.md) for the completed PR #2 rehearsal and repeatable operator steps. This does not authorize production deployment or legacy-import cutover.

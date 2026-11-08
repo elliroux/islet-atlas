@@ -61,3 +61,23 @@ test('lease prevents duplicate work, removed memberships retained, and malformed
   assert.throws(()=>catalogQuery('" injection'),/cursor/);
  }finally{db.close()}
 });
+
+test('throttled enumeration retains checkpoint, backs off, and recovers without duplicate records',async()=>{
+ const db=new TestD1();let calls=0;try{
+  await catalogTick(db,async()=>{calls++;return new Response('',{status:429,headers:{'Retry-After':'120'}})},epoch);
+  assert.equal(calls,1);assert.equal(db.count('gene_catalog'),0);
+  const failed=db.db.prepare('SELECT * FROM gene_catalog_jobs').get();assert.equal(failed.cursor,'');assert.equal(failed.lease_until,0);assert(failed.error);
+  await catalogTick(db,()=>{throw Error('must respect backoff')},epoch+1000);assert.equal(db.count('gene_catalog'),0);
+  await catalogTick(db,fixture(),epoch+3600001);assert.equal(db.count('gene_catalog'),1);assert.equal(db.count('evidence_assertions'),1);assert.equal((await browseCatalog(db)).coverage.error,null);
+ }finally{db.close()}
+});
+test('partial enrichment recovers after cooldown and crash-expired leases permit safe resumption',async()=>{
+ const db=new TestD1();try{
+  await catalogTick(db,fixture([member],{partial:true}),epoch);
+  assert.equal((await browseCatalog(db)).genes[0].status,'partial');
+  const count=db.count('evidence_runs');await catalogTick(db,()=>{throw Error('early retry')},epoch+1000);assert.equal(db.count('evidence_runs'),count);
+  db.db.exec(`UPDATE gene_catalog_jobs SET lease='simulated-crash',lease_until=${epoch+2000}`);
+  await catalogTick(db,fixture(),epoch+6*3600000+1);
+  assert.equal((await browseCatalog(db)).genes[0].status,'updated');assert.equal(db.count('evidence_assertions'),1);assert.equal(db.db.prepare('SELECT lease_until FROM gene_catalog_jobs').get().lease_until,0);
+ }finally{db.close()}
+});
