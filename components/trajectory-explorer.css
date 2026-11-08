@@ -1,0 +1,544 @@
+.trajectory-explorer {
+  --ia-bg: #f7f8f2;
+  --ia-surface: #ffffff;
+  --ia-ink: #23483d;
+  --ia-muted: #52695d;
+  --ia-line: #d6e1d6;
+  --ia-brand: #2d6655;
+  --ia-selected: #e8efe4;
+  --ia-warm: #f4ede3;
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  color-scheme: light;
+  color: var(--ia-ink);
+  background: var(--ia-bg);
+  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-align: left;
+}
+
+.trajectory-explorer *,
+.trajectory-explorer *::before,
+.trajectory-explorer *::after {
+  box-sizing: border-box;
+}
+
+.trajectory-explorer button {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.trajectory-explorer button:focus-visible,
+.trajectory-explorer a:focus-visible {
+  outline: 3px solid var(--ia-brand);
+  outline-offset: 3px;
+}
+
+.trajectory-explorer .ia-shell {
+  padding: 20px 24px 24px;
+}
+
+.trajectory-explorer .ia-concept,
+.trajectory-explorer .ia-small {
+  font-size: 12px;
+  color: var(--ia-muted);
+}
+
+.trajectory-explorer .ia-kicker {
+  margin: 14px 0 5px;
+  color: var(--ia-brand);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.trajectory-explorer h2,
+.trajectory-explorer h3,
+.trajectory-explorer h4 {
+  color: var(--ia-ink);
+  font-family: inherit;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.trajectory-explorer h2 {
+  margin: 0 0 8px;
+  font-size: 27px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.trajectory-explorer h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: normal;
+}
+
+.trajectory-explorer h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+.trajectory-explorer p {
+  margin: 0;
+}
+
+.trajectory-explorer .ia-intro {
+  max-width: 710px;
+  color: var(--ia-muted);
+}
+
+.trajectory-explorer .ia-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.trajectory-explorer .ia-label {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-stage-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.trajectory-explorer .ia-stage {
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--ia-line);
+  border-radius: 7px;
+  background: var(--ia-surface);
+}
+
+.trajectory-explorer .ia-stage[aria-pressed="true"] {
+  border-color: var(--ia-brand);
+  color: var(--ia-brand);
+  background: var(--ia-selected);
+}
+
+.trajectory-explorer .ia-workspace {
+  display: grid;
+  grid-template-columns: 218px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.trajectory-explorer .ia-sidebar {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: var(--ia-ink);
+  background: transparent;
+}
+
+.trajectory-explorer .ia-signal-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.trajectory-explorer .ia-signal {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 13px;
+  border: 1px solid var(--ia-line);
+  border-radius: 9px;
+  color: var(--ia-ink);
+  background: var(--ia-surface);
+  text-align: left;
+}
+
+.trajectory-explorer .ia-signal[aria-pressed="true"] {
+  border-color: var(--ia-brand);
+  color: var(--ia-ink);
+  background: var(--ia-selected);
+}
+
+.trajectory-explorer .ia-signal strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.trajectory-explorer .ia-signal span {
+  display: block;
+  margin-top: 5px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-sidebar-note {
+  margin-top: 9px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-detail {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ia-line);
+  border-radius: 12px;
+  background: var(--ia-surface);
+}
+
+.trajectory-explorer .ia-detail-head {
+  padding: 18px 20px 13px;
+}
+
+.trajectory-explorer .ia-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.trajectory-explorer .ia-source-type {
+  margin-bottom: 5px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-pill {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: var(--ia-brand);
+  background: var(--ia-selected);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.trajectory-explorer .ia-lane {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  margin: 0;
+  padding: 0 20px 16px;
+  list-style: none;
+}
+
+.trajectory-explorer .ia-phase {
+  min-width: 0;
+  margin: 0;
+  padding: 7px 0 0;
+  border-top: 3px solid var(--ia-line);
+  color: var(--ia-muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.trajectory-explorer .ia-phase.is-active {
+  border-color: var(--ia-brand);
+  color: var(--ia-ink);
+}
+
+.trajectory-explorer .ia-phase b {
+  display: block;
+  font-weight: 500;
+}
+
+.trajectory-explorer .ia-phase em {
+  display: block;
+  margin-top: 3px;
+  color: var(--ia-brand);
+  font-style: normal;
+}
+
+.trajectory-explorer .ia-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--ia-line);
+}
+
+.trajectory-explorer .ia-tab {
+  margin: 0;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: var(--ia-muted);
+  background: transparent;
+}
+
+.trajectory-explorer .ia-tab[aria-pressed="true"] {
+  border-bottom-color: var(--ia-brand);
+  color: var(--ia-ink);
+  background: transparent;
+}
+
+.trajectory-explorer .ia-panel {
+  padding: 18px 20px;
+}
+
+.trajectory-explorer .ia-observations {
+  margin: 0;
+  padding: 0;
+}
+
+.trajectory-explorer .ia-observation {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+}
+
+.trajectory-explorer .ia-observation:last-child {
+  margin-bottom: 0;
+}
+
+.trajectory-explorer .ia-observation dt {
+  margin: 0;
+  padding: 0;
+  color: var(--ia-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.trajectory-explorer .ia-observation dd {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.trajectory-explorer a {
+  color: var(--ia-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.trajectory-explorer .ia-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 16px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--ia-line);
+  font-size: 12px;
+  list-style: none;
+}
+
+.trajectory-explorer .ia-sources li {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.trajectory-explorer .ia-new-tab {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.trajectory-explorer .ia-open-question {
+  margin-top: 15px;
+  padding: 12px 14px;
+  border-radius: 7px;
+  background: var(--ia-warm);
+}
+
+.trajectory-explorer .ia-open-question p {
+  font-size: 13px;
+}
+
+.trajectory-explorer .ia-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.trajectory-explorer .ia-matrix-row {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ia-line);
+}
+
+.trajectory-explorer .ia-matrix-row span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-matrix-row b {
+  display: block;
+  font-weight: 500;
+}
+
+.trajectory-explorer .ia-treatment {
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid var(--ia-line);
+}
+
+.trajectory-explorer .ia-treatment p {
+  margin-top: 7px;
+}
+
+.trajectory-explorer .ia-study {
+  display: grid;
+  gap: 12px;
+}
+
+.trajectory-explorer .ia-study span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer .ia-study strong {
+  font-weight: 500;
+}
+
+.trajectory-explorer .ia-research-note {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 16px;
+  color: var(--ia-muted);
+  font-size: 12px;
+}
+
+.trajectory-explorer [hidden] {
+  display: none !important;
+}
+
+.trajectory-explorer .ia-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (hover: hover) {
+  .trajectory-explorer .ia-stage:hover,
+  .trajectory-explorer .ia-signal:hover {
+    border-color: var(--ia-brand);
+    background: var(--ia-selected);
+  }
+
+  .trajectory-explorer .ia-tab:hover {
+    color: var(--ia-ink);
+    background: var(--ia-selected);
+  }
+}
+
+@media (max-width: 650px) {
+  .trajectory-explorer .ia-shell {
+    padding: 16px;
+  }
+
+  .trajectory-explorer h2 {
+    font-size: 23px;
+  }
+
+  .trajectory-explorer .ia-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .trajectory-explorer .ia-signal-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .trajectory-explorer .ia-signal {
+    padding: 10px;
+  }
+
+  .trajectory-explorer .ia-signal strong {
+    font-size: 12px;
+  }
+
+  .trajectory-explorer .ia-signal span {
+    font-size: 11px;
+  }
+
+  .trajectory-explorer .ia-sidebar-note {
+    grid-column: 1 / -1;
+  }
+
+  .trajectory-explorer .ia-detail-head,
+  .trajectory-explorer .ia-panel {
+    padding: 16px;
+  }
+
+  .trajectory-explorer .ia-tabs {
+    padding: 0 8px;
+  }
+
+  .trajectory-explorer .ia-lane {
+    padding: 0 16px 16px;
+  }
+
+  .trajectory-explorer .ia-head-row {
+    display: block;
+  }
+
+  .trajectory-explorer .ia-pill {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .trajectory-explorer .ia-shell {
+    padding: 12px;
+  }
+
+  .trajectory-explorer .ia-signal-list {
+    grid-template-columns: 1fr;
+  }
+
+  .trajectory-explorer .ia-signal {
+    padding: 9px 12px;
+  }
+
+  .trajectory-explorer .ia-signal span {
+    margin-top: 2px;
+  }
+
+  .trajectory-explorer .ia-observation {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .trajectory-explorer .ia-matrix {
+    grid-template-columns: 1fr;
+  }
+
+  .trajectory-explorer .ia-tab {
+    padding: 10px;
+  }
+}
+
+@media (pointer: coarse) {
+  .trajectory-explorer button {
+    min-height: 44px;
+  }
+}

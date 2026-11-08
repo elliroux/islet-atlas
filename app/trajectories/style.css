@@ -1,0 +1,93 @@
+.trajectories-page {
+  --tr-paper: #f7f8f2;
+  --tr-ink: #23483d;
+  --tr-muted: #52695d;
+  --tr-line: #d6e1d6;
+  --tr-wash: #e8efe4;
+  --tr-deep: #234d40;
+  color: var(--tr-ink);
+}
+.trajectories-page .tr-intro { max-width: 960px; padding: 10px 0 30px; }
+.trajectories-page .tr-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+.trajectories-page .tr-meta p { margin: 0; }
+.trajectories-page .tr-status { padding: 4px 9px; border: 1px solid #b7c9b8; border-radius: 4px; font-size: 12px; }
+.trajectories-page h1 { max-width: 22ch; font-size: clamp(34px, 4.3vw, 60px); line-height: 1.08; letter-spacing: -1.8px; text-wrap: balance; }
+.trajectories-page .tr-deck { max-width: 70ch; margin: 22px 0; font-size: 17px; line-height: 1.65; color: var(--tr-muted); }
+.trajectories-page .tr-question { max-width: 790px; margin: 26px 0; padding: 0 0 0 20px; border-left: 3px solid #9bb49c; color: var(--tr-ink); font: 22px/1.48 Georgia, serif; }
+.trajectories-page .tr-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 9px; margin: 22px 0 12px; }
+.trajectories-page .tr-button { display: inline-flex; gap: 12px; justify-content: center; align-items: center; min-height: 44px; padding: 10px 16px; border: 1px solid #acbfb1; border-radius: 6px; background: #fff; color: var(--tr-ink); text-decoration: none; font: 600 14px/1.4 Arial, sans-serif; }
+.trajectories-page .tr-button:hover { background: #e1ebdf; }
+.trajectories-page .tr-button.tr-primary { background: var(--tr-deep); color: #fff; border-color: var(--tr-deep); }
+.trajectories-page .tr-button.tr-primary:hover { background: #37624f; }
+.trajectories-page .tr-version, .trajectories-page .tr-caption, .trajectories-page .tr-feedback-note { font-size: 12px; color: var(--tr-muted); line-height: 1.6; }
+.trajectories-page .tr-context { border-top: 1px solid var(--tr-line); padding: 28px 0 12px; }
+.trajectories-page h2 { font-size: clamp(26px, 2.5vw, 34px); letter-spacing: -.7px; line-height: 1.2; margin: 0 0 14px; text-wrap: balance; }
+.trajectories-page .tr-questions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; list-style: none; padding: 8px 0 0; margin: 0; }
+.trajectories-page .tr-questions h3 { font: 600 15px/1.4 Arial, sans-serif; margin: 8px 0; }
+.trajectories-page .tr-questions p { font-size: 14px; color: var(--tr-muted); margin: 0; }
+.trajectories-page .tr-step { color: #637d64; font-size: 12px; font-variant-numeric: tabular-nums; }
+.trajectories-page .tr-explore { margin-top: 42px; scroll-margin-top: 24px; }
+.trajectories-page .tr-section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.trajectories-page .tr-section-heading .atlas-kicker { margin: 0 0 9px; }
+.trajectories-page .tr-section-heading a { font-size: 13px; margin-bottom: 17px; }
+.trajectories-page .tr-explore-intro { max-width: 77ch; color: var(--tr-muted); margin: 0 0 18px; }
+.trajectories-page .tr-caption { margin: 12px 0 0; }
+.trajectories-page .tr-first-study { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; padding: 34px; margin-top: 48px; border-radius: 10px; background: var(--tr-wash); }
+.trajectories-page .tr-first-study .atlas-kicker { margin: 0 0 10px; }
+.trajectories-page .tr-first-study p { color: var(--tr-muted); font-size: 14px; }
+.trajectories-page .tr-first-study a { font-size: 14px; }
+.trajectories-page .tr-models { list-style: none; padding: 0; margin: 0; }
+.trajectories-page .tr-models li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px solid #c7d5c5; }
+.trajectories-page .tr-models li:first-child { padding-top: 0; }
+.trajectories-page .tr-models li:last-child { border: 0; padding-bottom: 0; }
+.trajectories-page .tr-models li > span { font: 26px Georgia, serif; color: #55765a; }
+.trajectories-page .tr-models h3 { font-size: 15px; line-height: 1.4; margin: 0 0 6px; }
+.trajectories-page .tr-models p { margin: 0; }
+.trajectories-page .tr-feedback { margin-top: 48px; padding-top: 30px; border-top: 1px solid var(--tr-line); }
+.trajectories-page .tr-feedback > div:first-child { max-width: 70ch; }
+.trajectories-page .tr-feedback-prompts { list-style: none; padding: 0; margin: 24px 0; max-width: 850px; }
+.trajectories-page .tr-feedback-prompts li { display: grid; grid-template-columns: 145px 1fr; gap: 20px; padding: 12px 0; border-top: 1px solid var(--tr-line); font-size: 14px; }
+.trajectories-page .tr-feedback-prompts span { color: var(--tr-muted); }
+.trajectories-page .tr-footer { display: flex; gap: 10px 24px; flex-wrap: wrap; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--tr-line); font-size: 13px; }
+.trajectories-page a { text-underline-offset: 3px; overflow-wrap: anywhere; }
+.trajectories-page .tr-screen-reader { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.trajectories-page .tr-share { max-width: 100%; }
+.trajectories-page .tr-manual-link { display: block; font: 12px/1.5 Arial, sans-serif; letter-spacing: 0; text-transform: none; margin-top: 8px; }
+.trajectories-page .tr-manual-link input { display: block; width: min(100%, 330px); font-size: 16px; }
+.trajectories-page .tr-document-heading { margin-bottom: 28px; }
+.trajectories-page .tr-document-heading h1 { max-width: 25ch; }
+.trajectories-page .tr-document-heading > a { display: inline-block; font-size: 13px; margin-bottom: 24px; }
+.trajectories-page .tr-contents { display: block; overflow: visible; border-block: 1px solid var(--tr-line); padding: 22px 0; margin-bottom: 30px; }
+.trajectories-page .tr-contents h2 { font-size: 22px; }
+.trajectories-page .tr-contents ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; padding: 0; margin: 14px 0 0; list-style: none; font-size: 14px; }
+.trajectories-page .tr-document { max-width: 920px; margin: 0; padding: 0; overflow-wrap: anywhere; }
+.trajectories-page .tr-document h2 { margin: 38px 0 16px; padding-top: 16px; border-top: 1px solid var(--tr-line); scroll-margin-top: 24px; }
+.trajectories-page .tr-document h3 { margin: 28px 0 12px; font-size: 20px; line-height: 1.4; scroll-margin-top: 24px; }
+.trajectories-page .tr-document p, .trajectories-page .tr-document li { line-height: 1.75; }
+.trajectories-page .tr-document ul, .trajectories-page .tr-document ol { padding-left: 24px; }
+.trajectories-page .tr-document li { margin: 8px 0; }
+.trajectories-page .tr-table-scroll { width: 100%; overflow-x: auto; margin: 22px 0; }
+.trajectories-page .tr-document table { min-width: 520px; font-size: 14px; }
+.trajectories-page .tr-document td { width: auto; }
+.trajectories-page .tr-document th { background: var(--tr-wash); }
+.trajectories-page .tr-document th, .trajectories-page .tr-document td { border-color: var(--tr-line); }
+@media (max-width: 1050px) {
+  .trajectories-page .tr-questions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .trajectories-page .tr-first-study { grid-template-columns: 1fr; gap: 24px; padding: 26px; }
+}
+@media (max-width: 540px) {
+  .trajectories-page .tr-intro { padding-top: 0; }
+  .trajectories-page h1 { letter-spacing: -1px; }
+  .trajectories-page .tr-question { font-size: 20px; padding-left: 14px; }
+  .trajectories-page .tr-deck { font-size: 16px; }
+  .trajectories-page .tr-questions { gap: 20px 16px; }
+  .trajectories-page .tr-first-study { padding: 20px; }
+  .trajectories-page .tr-feedback-prompts li { grid-template-columns: 1fr; gap: 4px; }
+  .trajectories-page .tr-contents ul { grid-template-columns: 1fr; }
+}
+@media (max-width: 350px) { .trajectories-page .tr-questions { grid-template-columns: 1fr; } }
+@media print {
+  .trajectories-page .tr-actions, .trajectories-page .tr-contents { display: none; }
+  .trajectories-page .tr-document { max-width: none; }
+  .trajectories-page .tr-table-scroll { overflow: visible; }
+}

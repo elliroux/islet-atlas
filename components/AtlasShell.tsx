@@ -8,6 +8,7 @@ const groups = [
     ["Overview", "/"],
     ["Nano to Macro", "/nano-to-macro"],
     ["Connections", "/connections"],
+    ["Trajectories", "/trajectories"],
     ["Find connections", "/#view=Find+connections"],
   ] },
   { title: "Evidence", links: [

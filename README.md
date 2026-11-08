@@ -2,7 +2,13 @@
 
 An open-source research workspace for people investigating the causes, progression and treatment of type 1 diabetes. Families, scientists and developers in the #WeAreNotWaiting community are invited to run a copy, correct evidence and extend the project. This is an independent project.
 
-[Public workspace](https://islet-evidence-atlas.mattepaste.chatgpt.site) · [Contribution guide](CONTRIBUTING.md)
+[Public workspace](https://isletatlas.org) · [Contribution guide](CONTRIBUTING.md)
+
+## Trajectories design preview
+
+[Explore the public design](https://isletatlas.org/trajectories) for connecting longitudinal molecular changes, detectable autoimmunity, mechanisms, and intervention evidence. The interactive examples distinguish published observations from proposed studies; participant-data models remain implementation and validation work.
+
+Read the [complete research specification](https://isletatlas.org/trajectories/design), download its [Markdown source](public/trajectories/research-design.md), or use the preview's GitHub feedback link to suggest evidence, corrections, and research priorities.
 
 ## Run locally
 

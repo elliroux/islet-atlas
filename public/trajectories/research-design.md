@@ -1,0 +1,247 @@
+# Islet Atlas Trajectories — Research Design
+
+Public design preview · November 8, 2026
+
+Islet Atlas Trajectories is a proposed research workspace for investigating which molecular changes precede detectable T1D-related autoimmunity, whether those changes improve prediction, and what evidence supports influencing the underlying process.
+
+Its main output is a traceable research hypothesis: a defined change, in a defined cell or tissue and population, before a defined event, with competing explanations, intervention evidence, and a decisive next test. The interface concept uses selected published examples. Participant-level models, data ingestion, and clinical prediction remain implementation and validation work.
+
+# The central design decision
+
+Keep four questions distinct throughout the system:
+
+1. What changed relative to an expected trajectory?
+
+2. Does that change reliably predict a specified outcome?
+
+3. What process could explain it, and is that process causal?
+
+4. Does a particular intervention improve a meaningful outcome with acceptable harms in the relevant population?
+
+A strong answer to one question must never silently upgrade the other three. The system should produce connections with explicit evidence types, including uncertainty and contradictory results. It should not produce a universal biological health score or a list of substances ranked as safe because they reverse an RNA signature.
+
+The earliest observable target should be described as **first confirmed persistent islet autoantibody detection**. An earlier blood measurement does not establish that the biological autoimmune process had not already begun.
+
+# What the user sees
+
+The proposed navigation item is **Trajectories**, inside Islet Atlas. Its initial question is “What changes before detectable autoimmunity?” A short question builder specifies population, outcome, biological layer, and prediction horizon. Advanced options reveal age range, inherited risk, family history, sample type, infection context, and study design.
+
+The main workspace has four connected views.
+
+| View | Purpose | Main result |
+| --- | --- | --- |
+| Evidence timeline | Place findings relative to observed disease transitions | A sourced account of when a signal appears and what the timing can establish |
+| Mechanism | Connect a signal with genetics, cell biology, and functional studies | Competing causal explanations and the evidence for each |
+| Influence | Examine a specified intervention in a specified setting | Target engagement, clinical outcomes, harms, and durability shown separately |
+| Next study | Turn an unresolved connection into an executable research question | Population, measurements, endpoint, comparator, analysis, falsifier, and data requirements |
+
+The initial interface concept provides three published signal examples: interferon response, monocyte state, and an NK-cell-associated program. Users can change the question window and inspect supporting observations, limiting evidence, and a proposed next study. The intervention examples demonstrate how changing the window changes the relevance of treatment evidence.
+
+A full implementation would add saved questions, a plain-language explanation toggle, evidence comparisons, downloadable reproducibility bundles, and a data-availability view. Those features should reuse one underlying evidence model so that simplified wording does not hide scientific qualifications.
+
+Every result should answer: **Why is this connection here? What would weaken it? What should be tested next?**
+
+# Preserve distinct disease transitions
+
+| Research track | Information available at the starting point | Outcome |
+| --- | --- | --- |
+| First detectable autoimmunity | No previously confirmed islet autoantibodies | First persistent confirmed autoantibody positivity |
+| Autoantibody spreading | Confirmed single autoantibody | Confirmed multiple autoantibodies |
+| Metabolic progression | Multiple autoantibodies and normoglycemia | Dysglycemia under the specified stage 2 criteria |
+| Clinical progression | A specified stage 1 or stage 2 population | Stage 3 under the study diagnostic criteria |
+| Preservation after diagnosis | Diagnosed T1D with characterized remaining function | Beta-cell function and clinical outcomes over time |
+
+Single-autoantibody positivity must not be relabeled stage 1. Confirmation and stage definitions should follow the study protocol, with any harmonized endpoint stored separately. The [2024 monitoring consensus](https://pubmed.ncbi.nlm.nih.gov/38912694/) distinguishes single from multiple autoantibody positivity and calls for confirmation using another sample.
+
+Store the last qualifying negative sample, first qualifying positive sample, and confirmation sample separately. The transition is observed within the interval after the last negative and through the first positive. The confirmation date establishes persistence according to the protocol; it is not the exact biological onset date.
+
+A retrospective timeline may align observations to eventual seroconversion. A predictive model must use only information available at its prediction time. In particular, a child's eventual IAA-first or GADA-first classification cannot be used as an input while the child is still antibody-negative. Store collection time, result availability time, and ingestion time separately.
+
+The interface should support both chronological age and time relative to an observed event, but always label which clock is shown. Event-aligned plots are descriptive unless a prospective prediction protocol has been executed.
+
+# The evidence model
+
+A paper is a source container. The central unit is a specific finding, linked to the participants, measurements, methods, endpoint, and source passage that support it.
+
+| Record | Essential information |
+| --- | --- |
+| Source | DOI, PMID or registry ID; publication and update dates; version; correction or retraction status; source locator; permitted use |
+| Cohort | Recruitment population, ages, genetic enrichment, geography, follow-up, cohort family, overlap with other studies |
+| Finding | Observed signal, direction, tissue, cell type, assay, timing, endpoint, effect and uncertainty, covariates, validation, limitations |
+| Molecular feature | Gene identifiers, variant and allele if relevant, pathway or module definition, version, directly measured versus inferred |
+| Event definition | Antibody assay and threshold, confirmation rule, glycemic criteria, date interval and uncertainty |
+| Intervention | Defined agent or exposure, biological target, direction, population, stage, duration, comparator, outcomes, harms, follow-up |
+| Connection | Typed relationship between records, supporting evidence, opposing evidence, context mismatch, review status |
+| Hypothesis | Proposed explanation, alternatives, predictions, falsifier, next test, linked evidence and analysis runs |
+| Dataset | Accession, access conditions, version, available files and metadata, participant linkage, analysis readiness |
+| Analysis run | Dataset snapshot, eligibility, code version, preprocessing, feature definitions, splits, model, metrics, uncertainty, limitations |
+
+Count participants, events, blood draws, publications, and cohorts separately. Multiple publications using the same children must not appear as multiple independent replications.
+
+Replication relationships should distinguish independent cohorts, independent participants within one cohort, reanalysis of overlapping participants, orthogonal assays on the same participants, mechanistic follow-up, and overlap unknown. Unknown overlap does not qualify as independence.
+
+Each connection has a specific meaning: associated with; precedes observed detection; predicts out of sample; genetically implicates; alters expression in a specified experiment; changes a clinical outcome in a trial; or raises a safety concern. A generic “related to” link can aid navigation but cannot establish a scientific claim.
+
+Variant-to-gene connections should preserve allele, genomic build, direction, cell context, and method. A nearby gene is not automatically the causal gene. Pathway enrichment is not a direct measurement of pathway activity. A blood-cell association is not automatically a pancreatic-cell mechanism.
+
+# Modeling the expected biological trajectory
+
+The participant-data workspace would begin with predefined biological modules rather than unconstrained searches across every gene. An initial hierarchical model would combine an age and context curve, person-specific deviations, and technical effects. Individuals with few prior samples would borrow information from an appropriate reference group while receiving wider uncertainty.
+
+Only measurements available before a prediction landmark may establish that person's expected state. Do not use their eventual disease status to define a personal baseline during evaluation.
+
+Candidate features include current deviation, slope, persistence across visits, response magnitude, recovery following a documented perturbation, and coordinated movement across biological layers. Distinguish measured observations from interpolation. Sparse sampling may support a slope but cannot establish the precise duration of a short immune response.
+
+Keep two analyses visible when feasible:
+
+- Total blood signal, including changes in cell composition.
+
+- Composition-adjusted or cell-resolved signal, addressing activity within cells.
+
+A changing cell mixture can itself be biologically informative. It should not automatically be removed as noise. Likewise, infection may be a confounder, mediator, or effect modifier depending on the question. Adjustment decisions should be justified by an explicit causal model and reported in the analysis record.
+
+Potential context includes age, development, sex, season, sample time, infection and vaccination history, medications, collection conditions, RNA quality, processing delay, assay platform, and batch. Include variables according to the question and data; missing exposure information must remain visible.
+
+The display should show expected range, observed values, uncertainty, reference-population fit, and sampling gaps. An unusual value identifies an observation to investigate. A stable personal state does not prove health, and a return toward baseline does not prove therapeutic benefit.
+
+# Connect mechanisms without flattening the evidence
+
+For each signal, generate competing explanations: causal driver, protective response, compensation, consequence, altered cell abundance, technical artifact, and a shared cause of both signal and outcome. The AI should retrieve evidence for and against each explanation, then propose a discriminating test.
+
+Evidence should be combined across appropriate sources: longitudinal human observations, human genetics, cell-specific regulatory studies, human tissue experiments, perturbation studies, animal studies, trials, and safety data. These sources answer different questions and should retain their labels.
+
+Signature-reversal tools can nominate experiments by identifying compounds that change an expression pattern. The output must preserve the cell line or tissue, exposure duration, experimental concentration, and measured response. A reversal in a cancer cell line is a computational lead, not evidence of prevention in a child.
+
+A relevant precedent already exists. [Mehdi and colleagues, 2018](https://insight.jci.org/articles/view/98212), combined longitudinal BABYDIET and DIPP expression data and explored drug-expression connectivity using cancer-cell-line reference data. This design builds on that class of work by making context, participant overlap, competing evidence, and validation visible.
+
+The useful novelty to pursue is operational: continually connect and reevaluate the evidence, expose the missing step in a proposed causal chain, and make the next analysis reproducible. A claim of a newly discovered biological relationship would require its own novelty search and experimental or statistical validation.
+
+# Evaluate influence and safety for a specific setting
+
+There should be no universal “safe to influence” badge. The unit of evaluation is an intervention, target or process, cell or tissue, disease stage, age and risk group, exposure duration, comparator, and clinical endpoint.
+
+| Evidence dimension | What must remain explicit |
+| --- | --- |
+| Temporal evidence | Which observed transition follows the measurement, with uncertain timing preserved |
+| Predictive value | Incremental performance against a specified comparator and validation population |
+| Causal support | Evidence for a driver versus competing explanations |
+| Ability to change the process | Actual target engagement in the relevant setting, or its absence |
+| Clinical benefit | A meaningful endpoint, effect estimate, uncertainty, and stage match |
+| Harms | Observed adverse outcomes, sample size, exposure duration, and remaining uncertainty |
+| Durability | Effects during exposure and after it stops |
+| Generalizability | Whether the population, tissue, age, and stage match the proposed use |
+
+The [June 2026 FDA teplizumab label](https://www.accessdata.fda.gov/drugsatfda_docs/label/2026/761183s010lbls014lbl.pdf) includes a stage 2 indication for delaying stage 3, and a separate accelerated-approval indication in recently diagnosed stage 3 children. It also includes serious viral-reactivation warnings. Those records demonstrate why indication, endpoint, label version, and harms must travel together. They do not establish pre-autoantibody prevention.
+
+The [2026 BANDIT follow-up](https://pubmed.ncbi.nlm.nih.gov/42627334/) reported waning baricitinib benefits after stopping treatment. Preserve treatment exposure and post-treatment outcomes separately; a lasting molecular or clinical effect must be demonstrated.
+
+The [TRIGR feeding trial](https://jamanetwork.com/journals/jama/fullarticle/2667723) did not demonstrate reduced T1D incidence from the tested hydrolyzed-formula intervention. Practical modifiability and plausible biology do not establish prevention.
+
+A null trial, a harmful result, an underpowered study, and an untested hypothesis are different states. The interface should not collapse them into “failed” or hide them from a mechanism dossier.
+
+# Initial research dossiers
+
+## Antiviral response and recovery
+
+[Ferreira 2014](https://pubmed.ncbi.nlm.nih.gov/24561305/) reported a transient interferon signature before autoantibodies. [Lin 2023](https://www.nature.com/articles/s41467-023-42763-9) found a different infection-aligned pattern, with stronger antiviral responses in controls than future seroconverters. Keep the endpoints, pathogens, sampling windows, and signatures distinct.
+
+The proposed question is whether response timing and recovery provide useful information beyond a single high or low reading. Test inadequate early response, prolonged response, and ordinary recovery as separate alternatives.
+
+Human genetic findings involving [IFIH1 and lower T1D risk](https://pubmed.ncbi.nlm.nih.gov/19264985/) can connect this dossier to antiviral sensing. Separate evidence linking [some IFIH1 loss-of-function variants to severe viral respiratory illness](https://pubmed.ncbi.nlm.nih.gov/28716935/) creates a host-defense concern. Different variants and biological contexts must not be treated as interchangeable.
+
+## Monocyte state
+
+[TRIGR 2026](https://pubmed.ncbi.nlm.nih.gov/41741442/) supports investigating early monocyte-lineage differences. Convergence across RNA and chromatin measurements in the same children is distinct from replication in an independent cohort. The proposed next test separates cell abundance from within-cell regulation and seeks independent pre-antibody validation.
+
+## NK-associated programs
+
+[TEDDY and DIPP 2021](https://pubmed.ncbi.nlm.nih.gov/33790023/) connect selected NK-associated expression patterns to progression. The proposed next test asks when the signature adds information beyond already available antibody and clinical data, with subgroup definitions restricted to information available at prediction time.
+
+These are initial evidence dossiers, not ranked causal discoveries. Each should expose the exact measured module and the conditions under which it was studied.
+
+# Data access and the first executable study
+
+The system has two modes.
+
+**Evidence mode** uses publications, registries, source data, and permitted supplementary materials. It can map findings, compare evidence, identify overlap, and design studies.
+
+**Participant-data mode** requires authorized linked longitudinal observations. It can estimate trajectories and evaluate prediction. A paper link, abstract, or consumer genotype file cannot substitute for these observations.
+
+| Candidate source | Starting point | Readiness requirement |
+| --- | --- | --- |
+| BABYDIET | [E-MTAB-1724](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-1724) | Public expression data are documented; audit clinical labels, sample linkage, covariates, and permitted reuse |
+| DIPP | [GSE30211](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE30211) and [GSE43488](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE43488) | Resolve parent/subseries overlap, shared controls, exclusions, and compatible outcome labels |
+| TEDDY | [phs001442.v4.p3](https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs001442.v4.p3) | Controlled-access omics and associated phenotype permissions |
+| TRIGR | [EGAD50000001257](https://ega-archive.org/datasets/EGAD50000001257) | Data-access request, participant metadata, and deconvolution of pooled biospecimens |
+
+The [2018 paper](https://insight.jci.org/articles/view/98212) documents the BABYDIET and DIPP public accessions. The [TEDDY data statement](https://www.nature.com/articles/s41467-023-42763-9) specifies restricted access. The TRIGR repository describes access review and pooled specimens. Availability of an accession does not establish that the complete benchmark can run.
+
+## Proposed primary benchmark
+
+Question: **Does personal molecular change improve prediction of first persistent confirmed autoantibody positivity beyond the latest molecular measurement alone?**
+
+Population: Initially antibody-negative participants in a prespecified age and risk group, with at least two preceding usable samples for the first slope-based analysis. Report how that eligibility rule changes the represented population.
+
+Landmarks: Eligible scheduled visits using only results already available at that point.
+
+Primary horizon: Twelve months, proposed for preregistration after checking visit cadence and event counts. Six- and twenty-four-month horizons may be secondary. Preserve interval and right censoring.
+
+Compare three models:
+
+1. Age, inherited and family risk, and available clinical or contextual information.
+
+2. The same model plus the latest predefined molecular-module values.
+
+3. The same model plus longitudinal features such as deviations, slopes, and persistence.
+
+The decisive comparison is model 3 against model 2. Otherwise an apparent improvement could come from measuring RNA at all, without demonstrating value from a personal trajectory.
+
+Use frozen feature definitions, training procedures, and analysis code for external validation. Prespecify required improvement and tolerable false-alert burden after the endpoint prevalence and intended research action are known. Do not invent a success threshold or a performance result.
+
+A separate benchmark can reproduce an existing clinical-progression analysis. Label it by its actual outcome; predicting diagnosis is not equivalent to predicting first autoantibody appearance.
+
+# Validation that makes the result credible
+
+Keep every visit from a participant in one validation split. Keep relatives together when evaluating transfer beyond a family. Normalize, correct batch effects, impute, select modules, and tune models inside training data. Do not allow the held-out cohort to influence feature selection.
+
+Prevent future-information leakage from event-aligned time, later samples, eventual antibody subtype, post-event measurements, or retrospective selection of a person's “healthy” visits. Outcome observations after a landmark may establish the label but cannot become predictors.
+
+Account for sampling design before reporting absolute risk. A nested case-control sample does not directly supply population prevalence. Report sampling-frequency changes, informative missingness, loss to follow-up, event-time uncertainty, and the effect of requiring repeated samples.
+
+Report discrimination and calibration, sensitivity and positive predictive value at a prespecified alert burden, false alerts per person-year, and useful lead time. Include uncertainty clustered by participant or family, with subgroup results only where sample sizes support them.
+
+The model must be able to return “insufficient data,” “reference population mismatch,” or “external validation not yet available.” These are informative results.
+
+# AI behavior and review
+
+AI can extract structured candidate findings, resolve identifiers, find related and opposing studies, flag cohort overlap, suggest explanations, and draft next-study protocols.
+
+Every generated factual statement must point to supporting source material. Source evidence and AI-proposed connections remain distinct. A reviewer confirms the relationship, stage, endpoint, and limits before it becomes a curated claim.
+
+Retrieval should deliberately seek null findings, safety evidence, later follow-up, and studies from independent participants. It should not optimize solely for supporting the user's preferred explanation.
+
+A model-generated hypothesis should contain the observation, proposed mechanism, alternatives, predictions, a falsifying result, and the next feasible analysis. It should be possible to export the source set and reproduce the reasoning inputs.
+
+# Privacy and collaboration
+
+Public evidence and private participant data use separate access boundaries. Participant records use pseudonymous identifiers, permission checks, access logs, and appropriate data-use restrictions. Family relationships and genomic data must not enter a public knowledge graph by default.
+
+Open source can cover code, schemas, methods, and permitted curated evidence. It does not authorize publication of participant records or restricted source material. Any future family collection would require an appropriate consent and oversight pathway, especially for children. The present design can begin with existing evidence and appropriately accessible data.
+
+# Integration and release sequence
+
+The proposed integration adds typed findings and connections to existing Islet Atlas research items, then attaches dataset records and reproducible analysis runs. Exact implementation should follow the current application architecture at build time.
+
+1. **Curated evidence workspace:** Signal dossiers, source passages, stage and endpoint filters, overlap records, contradictory findings, and next-study drafts. Release when all displayed claims are traceable and no personal risk estimates are implied.
+
+2. **Public-data reproducibility workbench:** Audit candidate datasets, reproduce a published result, and run the predefined trajectory benchmark where linkage and labels permit. Release each result with its reproducibility bundle and unresolved limitations.
+
+3. **Independent validation:** Evaluate frozen models in authorized external data. Add calibration, alert burden, lead time, and generalizability reports.
+
+4. **Prospective research workflow:** Consider new sampling only after assay feasibility, scientific value, permissions, and a response plan are established.
+
+5. **Intervention prioritization:** Advance a proposed intervention only with an explicit mechanism, relevant target engagement, and a study designed around both benefit and harm. Clinical use requires a separate evidence base.
+
+Version sources and link study families over time. Trial status, later trials, follow-up reports, regulatory decisions, and corrections should update the affected connections while preserving history. A discontinued trial should not label an entire research program abandoned.
+
+The first deliverable should be a small number of carefully curated dossiers and one meaningful, reproducible comparison of static versus longitudinal information. The success criterion is a clearer, testable research decision—even when the evidence weakens an attractive hypothesis.
