@@ -7,6 +7,7 @@ declare namespace Cloudflare {
     OPENAI_API_KEY?: string;
     ATLAS_AI_OWNER_ID?: string;
     DB?: D1Database;
+    ATLAS_BACKGROUND_INGESTION?: "enabled" | "disabled";
     BUCKET?: R2Bucket;
   }
 }

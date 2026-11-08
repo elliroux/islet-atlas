@@ -56,3 +56,8 @@ Default connector and auth tests passed. Bounded live HLA-DQA1 test resolved ENS
 7. Gate production migration, automation cutover and deployment on explicit approval and reconciliation. Continue source collection until then.
 
 See `ADR-001-D1-EVIDENCE.md` for the infrastructure decision and `MIGRATION.md` for export and rollback requirements. Broad cohort-level synthesis, full entity ontology expansion, clinical-effect extraction and automated retraction reconciliation remain follow-up work until implemented and validated.
+
+
+## Follow-up: gene catalog
+
+The branch now adds additive migration 0003, public read-only catalog browsing and an opt-in Worker scheduled handler. PanKgraph enumeration is verified; it contains predicted effector/colocalization links and is not comprehensive T1D genetic coverage. See [catalog architecture, source scope and activation](GENE_CATALOG.md). Production schedules and legacy imports remain unchanged.

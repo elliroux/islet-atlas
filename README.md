@@ -38,3 +38,6 @@ research/corpus.json contains curated records, findings and study families. rese
 ## License
 
 Original Islet Atlas code and original evidence annotations are available under Apache License 2.0 (LICENSE). Dependencies and bundled third-party components retain their respective licenses and notices. Source publications, quoted material and linked datasets remain subject to their own terms. This release contains no participant-level cohort files, notebooks, hosting credentials or private Git history.
+
+
+Browse source-reported T1D genes without typing a symbol; inspect catalog coverage, source dates and bounded background updates. See [Gene catalog](docs/GENE_CATALOG.md).

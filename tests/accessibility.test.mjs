@@ -23,3 +23,13 @@ test('saved-evidence controls and expanded discovery content pass axe semantic r
  assert.equal(result.violations.length,0,JSON.stringify(result.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.html)}))));
  dom.window.close();
 });
+
+const {CatalogResults}=await import('../components/GeneCatalog.tsx');
+test('gene catalog can be explored with buttons and has accessible coverage labels',async()=>{
+ const markup=renderToStaticMarkup(React.createElement(CatalogResults,{onSelect:()=>{},data:{genes:[{id:'ENSEMBL:ENSG00000134460',symbol:'IL2RA',status:'pending',last_seen:'2026-11-08',document:{predicates:['effector_gene_of'],sources:['Fixture predicted genes'],query:'MATCH example',endpoint:'https://example.org'},detail:[]}],coverage:{genes:1,updated:0,partial:0,failed:0,provider:'PanKgraph',sources:[{source:'Fixture predicted genes',genes:1}],backgroundEnabled:false,lastPage:'2026-11-08',lastComplete:null},limitations:['Coverage is incomplete.']}}));
+ const dom=new JSDOM('<!doctype html><html lang="en"><head><title>Catalog</title></head><body><main><h1>Atlas</h1><h2>Gene catalog</h2>'+markup+'</main></body></html>',{runScripts:'outside-only'});
+ assert.equal(dom.window.document.querySelector('button').textContent,'Explore IL2RA →');
+ assert.match(dom.window.document.body.textContent,/Last completed catalog scan: Not yet recorded/);
+ for(const d of dom.window.document.querySelectorAll('details'))d.open=true;
+ dom.window.eval(axe.source);const result=await dom.window.axe.run(dom.window.document,{rules:{'color-contrast':{enabled:false}}});assert.equal(result.violations.length,0,JSON.stringify(result.violations));dom.window.close();
+});

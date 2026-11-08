@@ -2,11 +2,12 @@
 import {useEffect,useRef,useState} from "react";
 import type {ConnectedRun,GraphLink} from "../../research/connectors/types";
 import "./style.css";
+import GeneCatalog from "../../components/GeneCatalog";
 import SavedEvidence from "../../components/SavedEvidence";
 
 function Relation({link}:{link:GraphLink}){return <details className="connected-relation"><summary><span>{link.subject}</span> <small>{link.predicate.replace("biolink:","").replaceAll("_"," ")}</small> <span>{link.object}</span></summary><p>{link.kind} · {link.sources.join(" / ")||"Source not supplied"}</p>{link.urls.map((u,i)=><p key={u+i}><a href={u} target="_blank" rel="noreferrer">Inspect source {i+1} ↗</a></p>)}<p>{link.publications.length?"Linked publications: "+link.publications.join(", "):"No publication identifier supplied on this edge."}</p><details><summary>Relationship qualifiers and original metadata</summary><pre>{JSON.stringify(link.properties,null,2)}</pre></details></details>}
 export default function ConnectedResearch(){
- const [gene,setGene]=useState("IL2RA"),[run,setRun]=useState<ConnectedRun>(),[busy,setBusy]=useState(false),[error,setError]=useState(""),[view,setView]=useState("Connections"),[saved,setSaved]=useState<ConnectedRun[]>([]),[message,setMessage]=useState("");
+ const [gene,setGene]=useState(""),[run,setRun]=useState<ConnectedRun>(),[busy,setBusy]=useState(false),[error,setError]=useState(""),[view,setView]=useState("Connections"),[saved,setSaved]=useState<ConnectedRun[]>([]),[message,setMessage]=useState("");
  const sequence=useRef(0);
  const [savedGene,setSavedGene]=useState<string>();
  useEffect(()=>{const g=new URLSearchParams(location.search).get("gene");if(g&&/^[A-Z][A-Z0-9-]{0,24}$/.test(g)){setGene(g);setSavedGene(g)}},[]);
@@ -22,7 +23,9 @@ export default function ConnectedResearch(){
  function download(){if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download="islet-connections-"+run.gene+"-"+run.date.slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
  return <div className="connected-workspace"><main>
   <div className="connected-intro"><span className="connected-kicker">CONNECTED RESEARCH · EXPERIMENTAL</span><h1>Follow a biological connection.</h1><p>Explore a gene’s pathways, investigate related drugs, and look for T1D publications and trials. Every step keeps its sources.</p></div>
-  <form className="connected-search" onSubmit={e=>{e.preventDefault();void investigate()}}><label htmlFor="connected-gene">Start with a human gene symbol</label><div><input id="connected-gene" value={gene} onChange={e=>setGene(e.target.value.toUpperCase())} maxLength={25} pattern="[A-Za-z][A-Za-z0-9-]{0,24}" required disabled={busy}/><button disabled={busy}>{busy?"Connecting research…":"Explore connections →"}</button></div><small>Start with IL2RA or a specific HLA gene, such as HLA-DQA1. This first workflow explores one gene at a time. No model key required.</small></form>
+  <GeneCatalog disabled={busy} onSelect={g=>{setGene(g);setSavedGene(g);setRun(undefined);setView("Saved discoveries");setError("");setMessage("Opened saved evidence for "+g+". Use Explore connections to request a fresh investigation.");document.getElementById("gene-exploration")?.focus();}}/>
+  <section id="gene-exploration" tabIndex={-1} aria-label="Selected gene investigation"><h2>{gene?"Investigate "+gene:"Optional gene lookup"}</h2>
+  <form className="connected-search" onSubmit={e=>{e.preventDefault();void investigate()}}><label htmlFor="connected-gene">Selected gene or optional human gene symbol</label><div><input id="connected-gene" value={gene} onChange={e=>setGene(e.target.value.toUpperCase())} maxLength={25} pattern="[A-Za-z][A-Za-z0-9-]{0,24}" required disabled={busy}/><button disabled={busy}>{busy?"Connecting research…":"Explore connections →"}</button></div><small>Select a catalog entry above, or enter a specific gene to investigate beyond catalog coverage. Fresh retrieval uses PanKgraph, Translator, literature and trial sources.</small></form>
   <div className="connected-actions saved-browse"><button disabled={busy||!/^([A-Z][A-Z0-9-]{0,24})$/.test(gene.trim())} onClick={()=>{setSavedGene(gene.trim());setRun(undefined);setView("Saved discoveries")}}>Browse saved evidence</button><a href="/nano-to-macro#node=hla">Explore biological scales →</a></div>
   {gene.trim().toUpperCase()==="HLA"&&<section className="connected-resolution"><h2>HLA is a family of genes</h2><p>Choose a specific gene to retrieve biological and drug connections. These are starting choices, not the complete HLA family. Alleles and haplotypes are not resolved by this gene-level search.</p><div className="connected-actions">{["HLA-DQA1","HLA-DQB1","HLA-DRB1"].map(g=><button key={g} disabled={busy} onClick={()=>void investigate(undefined,g)}>Explore {g} →</button>)}</div><a href="https://medlineplus.gov/genetics/condition/type-1-diabetes/" target="_blank" rel="noreferrer">About HLA genes and T1D ↗</a></section>}
   <p role="status">{busy?"Consulting PanKgraph, Translator, publications and trials. This may take about a minute.":message}</p>{error&&<p role="alert">{error}</p>}
@@ -37,5 +40,5 @@ export default function ConnectedResearch(){
   {run?.persistence&&<p role="status">{run.persistence.notice}{run.persistence.quarantined?` ${run.persistence.quarantined} relationships require identifier review.`:""}</p>}
   {savedGene&&(!run||view==="Saved discoveries")&&<SavedEvidence gene={savedGene} revision={run?.id}/>}
   {!!saved.length&&<details className="connected-log"><summary>Saved connected investigations ({saved.length})</summary>{saved.map(s=><p key={s.id}><button disabled={busy} onClick={()=>{setRun(s);setGene(s.gene);setSavedGene(s.gene);setView("Saved discoveries");setError("");setMessage("Opened saved snapshot; providers have not been queried again.")}}>{s.candidate||s.gene} · {new Date(s.date).toLocaleString()}</button></p>)}</details>}
- </main></div>
+ </section></main></div>
 }

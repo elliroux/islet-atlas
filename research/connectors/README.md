@@ -33,3 +33,6 @@ Entering HLA displays an explicit family explanation and HLA-DQA1/HLA-DQB1/HLA-D
 ## Phase 2 changes
 
 PanKgraph keeps source/destination identifiers and categories; KEGG `hsa_` IDs normalize to stable CURIEs. Translator edges must match both result-bound endpoints, and statistical associations are distinct from computational predictions. Requests have one transient retry within a shared 45-second deadline. Stable source identity, retrieval history, review state, and metadata retention policy are required before new connectors enter persistence. Run `pnpm test` for ingestion/discovery/migration/security/accessibility checks; default CI has no live provider dependency.
+
+
+The [gene catalog](../../docs/GENE_CATALOG.md) enumerates direct PanKgraph T1D gene links in 50-gene pages. Background enrichment uses these same connectors. Prediction-attributed PanKgraph edges are computational inferences, not established causal associations.

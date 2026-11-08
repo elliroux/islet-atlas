@@ -40,3 +40,12 @@ Initial Wrangler preview encountered macOS watcher/settings restrictions; checko
 ## Migration verification boundary
 
 The synthetic migration rehearsal confirms mechanics, preservation, hashes, indexing, conflict reporting and retry behavior. It does **not** prove parity of the real databases. Read-only production coverage showed 16,136 independent publications versus 26,027 legacy publications, with equal trial/finding counts and a 55-body full-text difference. Complete authorized exports, actual record-level reconciliation, staging transport validation and conflict review remain mandatory before production migration/automation cutover. See `MIGRATION.md` and `PHASE_2_STATUS.md`.
+
+## Gene catalog follow-up (2026-11-08)
+
+- 29 Node tests and 8 Python tests passed, plus the connector assertion suite. New tests cover catalog paging/idempotency/transaction rollback, retry and retained memberships, partial providers, identity mismatch, the global lease, public read-only validation, prediction classification and catalog axe semantics.
+- TypeScript, Cloudflare build, Drizzle schema check, local migration 0003 and Wrangler deployment dry-run passed.
+- Five bounded live **local** scheduled invocations enumerated 223 unique PanKgraph-linked genes and enriched five genes (CFTR, SKAP2, FARP2, ST7L, CD6) through the existing connectors. All five recorded successful provider completion; this does not imply positive scientific results. Underlying source membership counts: HIRN QTL/GWAS 18; Gaulton predictions 177; Atla predictions 18; Onengut-Gumuscu/Rich predictions 54. Counts overlap.
+- Local browser selection of CFTR without typing retrieved 160 persisted relationships and 11 literature/registry matches, plus candidate research prompts. Keyboard selection transferred focus to the investigation. Catalog pagination, source/update display and 390px mobile overflow were checked. Only five genes were enriched in this bounded live test; enrichment of the whole catalog and primary-source coverage expansion remain future operations.
+- The pinned Wrangler asset router returned a local scheduled-simulation error. The committed local-only preview helper removes asset routing from its temporary config and successfully exercises the built Worker's scheduled handler and the same local D1. Production scheduled activation still requires staging verification.
+- No production database write, deployment, trigger activation, legacy schedule change or migration-parity claim was made.

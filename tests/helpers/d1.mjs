@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 export class TestD1 {
   constructor() {
     this.db = new DatabaseSync(':memory:'); this.db.exec('PRAGMA foreign_keys=ON');
-    for(const name of ['0000_swift_phalanx','0001_lovely_medusa','0002_unified_evidence'])this.db.exec(readFileSync(new URL('../../drizzle/'+name+'.sql',import.meta.url),'utf8'));
+    for(const name of ['0000_swift_phalanx','0001_lovely_medusa','0002_unified_evidence','0003_gene_catalog'])this.db.exec(readFileSync(new URL('../../drizzle/'+name+'.sql',import.meta.url),'utf8'));
   }
   prepare(sql) {
     const state={params:[]},db=this.db;

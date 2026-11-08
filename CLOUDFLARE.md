@@ -73,3 +73,6 @@ the notebook before enabling other accounts. Independent identities use an
 Read [migration and rollback instructions](docs/MIGRATION.md) and [current limitations](docs/PHASE_2_STATUS.md). Migration 0002 adds evidence tables and a history trigger without resetting existing data. Apply and verify it first in an independent staging D1 with its own config/database ID. Never use the production ID for a staging remote command. `pnpm test` covers atomic batches and resumable migration; `pnpm build:cloudflare` and Wrangler `--dry-run` do not publish. The GitHub Actions workflow only tests/builds locally.
 
 After approval, deploy through the existing Cloudflare pipeline, check `/api/evidence?coverage=1`, run a bounded investigation, verify its `persistence.status`, reload `/connections?gene=IL2RA`, and verify notebook authorization. Keep the prior Worker version and verified backup available. If the graph fails, roll back the Worker code while retaining additive tables and research archives. Do not activate the new automation target until actual migration parity passes.
+
+
+The gene catalog adds migration 0003 and an opt-in scheduled handler. No production Cron Trigger is configured. See [catalog staging, activation and rollback](docs/GENE_CATALOG.md); activation requires explicit owner approval.

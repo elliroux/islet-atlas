@@ -99,3 +99,20 @@ export const researchMigrationRows = sqliteTable("research_migration_rows", {
 export const researchMigrationBatches = sqliteTable("research_migration_batches", {
   source:text("source").notNull(),snapshot:text("snapshot").notNull(),batch:integer("batch").notNull(),count:integer("count").notNull(),completedAt:text("completed_at").notNull(),
 }, t=>[primaryKey({columns:[t.source,t.snapshot,t.batch]})]);
+
+// Source-reported catalog membership; enrichment uses the existing evidence graph.
+export const geneCatalog = sqliteTable("gene_catalog", {
+  id:text("id").primaryKey(), symbol:text("symbol").notNull(), document:text("document").notNull(),
+  firstSeen:text("first_seen").notNull(), lastSeen:text("last_seen").notNull(),
+  lastAttempt:text("last_attempt"), lastSuccess:text("last_success"), nextAttempt:integer("next_attempt").notNull().default(0),
+  status:text("status").notNull().default("pending"), detail:text("detail").notNull().default("[]"),
+},t=>[index("gene_catalog_symbol").on(t.symbol),index("gene_catalog_due").on(t.nextAttempt,t.id)]);
+export const geneCatalogVersions = sqliteTable("gene_catalog_versions", {
+  id:text("id").primaryKey(),geneId:text("gene_id").notNull(),document:text("document").notNull(),retrievedAt:text("retrieved_at").notNull(),
+});
+export const geneCatalogJobs = sqliteTable("gene_catalog_jobs", {
+  id:text("id").primaryKey(),cursor:text("cursor").notNull().default(""),
+  scanStarted:text("scan_started"),lastPage:text("last_page"),lastComplete:text("last_complete"),
+  nextScan:integer("next_scan").notNull().default(0),error:text("error"),
+  lease:text("lease"),leaseUntil:integer("lease_until").notNull().default(0),
+});

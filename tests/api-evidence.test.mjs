@@ -45,3 +45,14 @@ test('streamed oversized investigation body is rejected before parsing',async()=
  const response=await connections.POST(new Request('https://isletatlas.org/api/connections',{method:'POST',headers:{Origin:'https://isletatlas.org'},body:'x'.repeat(1001)}));
  assert.equal(response.status,413);
 });
+
+const catalog=await import('../app/api/genes/route.ts');
+test('catalog read requires no gene, validates keyset filters and never starts ingestion',async()=>{
+ const db=new TestD1();globalThis.__evidenceEnv.DB=db;
+ try{
+  const r=await catalog.GET(new Request('https://isletatlas.org/api/genes'));assert.equal(r.status,200);const data=await r.json();assert.equal(data.coverage.genes,0);assert.equal(data.coverage.lastComplete,null);assert.equal(db.count('gene_catalog_jobs'),0);
+  assert.equal((await catalog.GET(new Request('https://isletatlas.org/api/genes?after=bad'))).status,400);
+  assert.equal((await catalog.GET(new Request('https://isletatlas.org/api/genes?q=%25'))).status,400);
+ }finally{db.close();delete globalThis.__evidenceEnv.DB}
+ assert.equal((await catalog.GET(new Request('https://isletatlas.org/api/genes'))).status,503);
+});

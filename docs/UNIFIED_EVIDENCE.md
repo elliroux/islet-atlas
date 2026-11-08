@@ -59,3 +59,6 @@ These are not distributed abuse controls. A production WAF/rate-limit configurat
 A connector accepts an injectable fetcher and fixed provider URLs, returns stable endpoint IDs, edge direction, source/provider identity, publication references, query/retrieval status and available context. It must distinguish an empty response from a failure. Add deterministic fixtures for empty/invalid/timeout/transient responses and source-specific identities. Never fabricate metadata to satisfy the contract. Add a canonical-ID rule only after observing and documenting the source form; test it. Keep raw rights-restricted text outside the durable graph and document the policy. Keep hypotheses in `discovery.ts`, separate from source assertions.
 
 Run `pnpm test`, `pnpm check`, `pnpm build:cloudflare`, local D1 migrations and Wrangler dry-run. Node 24 is used for tests (native SQLite and module hooks); Python 3.12+ runs migration tests. CI does not call live providers. Optional bounded live tests are explicit commands in the connector README.
+
+
+The [browsable gene catalog](GENE_CATALOG.md) adds source-reported membership separately from evidence assertions. Its opt-in scheduled enrichment reuses this persistence pipeline and discovery retrieval.
