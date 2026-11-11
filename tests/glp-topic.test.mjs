@@ -5,7 +5,7 @@ import { registerHooks } from 'node:module';
 import { GLP_TOPIC } from '../research/topics.ts';
 const db = new DatabaseSync(':memory:');
 db.exec('CREATE TABLE research_records (id TEXT,title TEXT,url TEXT,year INTEGER,provider TEXT,document TEXT,kind TEXT,abstract TEXT)');
-globalThis.__topicTestEnv = { DB: { prepare(sql) { return { bind(...args) { return { async all() { return { results: db.prepare(sql).all(...args) }; } }; } }; } } };
+globalThis.__topicTestEnv = { DB: { prepare(sql) { return { bind(...args) { assert.ok(args.length <= 100, 'D1 supports at most 100 bound parameters'); return { async all() { return { results: db.prepare(sql).all(...args) }; } }; } }; } } };
 registerHooks({ resolve(specifier, context, next) {
   if (specifier === 'cloudflare:workers') return { url: 'data:text/javascript,export const env = globalThis.__topicTestEnv;', shortCircuit: true };
   if (specifier.endsWith('/research/topics')) return next(specifier + '.ts', context);
