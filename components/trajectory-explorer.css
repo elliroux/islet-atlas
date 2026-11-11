@@ -1,12 +1,12 @@
 .trajectory-explorer {
-  --ia-bg: #f7f8f2;
+  --ia-bg: #fafafa;
   --ia-surface: #ffffff;
-  --ia-ink: #23483d;
-  --ia-muted: #52695d;
-  --ia-line: #d6e1d6;
-  --ia-brand: #2d6655;
-  --ia-selected: #e8efe4;
-  --ia-warm: #f4ede3;
+  --ia-ink: #171717;
+  --ia-muted: #171717;
+  --ia-line: #d8d8d8;
+  --ia-brand: #171717;
+  --ia-selected: #f0f0f0;
+  --ia-warm: #f0f0f0;
   position: relative;
   width: 100%;
   min-width: 0;
@@ -130,7 +130,7 @@
   margin: 0;
   padding: 8px 12px;
   border: 1px solid var(--ia-line);
-  border-radius: 7px;
+  border-radius:3px;
   background: var(--ia-surface);
 }
 
@@ -167,7 +167,7 @@
   margin: 0;
   padding: 13px;
   border: 1px solid var(--ia-line);
-  border-radius: 9px;
+  border-radius:3px;
   color: var(--ia-ink);
   background: var(--ia-surface);
   text-align: left;
@@ -202,7 +202,7 @@
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--ia-line);
-  border-radius: 12px;
+  border-radius:3px;
   background: var(--ia-surface);
 }
 
@@ -366,7 +366,7 @@
 .trajectory-explorer .ia-open-question {
   margin-top: 15px;
   padding: 12px 14px;
-  border-radius: 7px;
+  border-radius:3px;
   background: var(--ia-warm);
 }
 

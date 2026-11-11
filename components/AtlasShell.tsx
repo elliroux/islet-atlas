@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
 const groups = [
@@ -37,13 +37,23 @@ export default function AtlasShell({ children }: { children: ReactNode }) {
   const content = useRef<HTMLDivElement>(null);
 
   function dismissOnEscape(event: KeyboardEvent) {
-    if (event.key !== "Escape" || !menuOpen || !menuButton.current?.getClientRects().length) return;
+    if (event.key !== "Escape") return;
+    const dropdown = (event.target as HTMLElement).closest("details");
+    if (dropdown?.open) {
+      event.preventDefault();
+      dropdown.open = false;
+      dropdown.querySelector("summary")?.focus();
+      return;
+    }
+    if (!menuOpen || !menuButton.current?.getClientRects().length) return;
     event.preventDefault();
     setMenuOpen(false);
     menuButton.current.focus();
   }
 
-  function followNavigationLink() {
+  function followNavigationLink(event: MouseEvent<HTMLAnchorElement>) {
+    const dropdown = event.currentTarget.closest("details");
+    if (dropdown) dropdown.open = false;
     if (!menuButton.current?.getClientRects().length) return;
     setMenuOpen(false);
     content.current?.focus();
@@ -60,9 +70,10 @@ export default function AtlasShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="atlas-site">
+      <a className="atlas-skip" href="#atlas-content">Skip to content</a>
       <header className="atlas-brandbar">
-        <a href="/" className="atlas-wordmark"><img src="/favicon.svg" alt="" />Islet Atlas</a>
-        <span>Type 1 diabetes research</span>
+        <a href="/" className="atlas-wordmark">Islet Atlas</a>
+
         <button
           ref={menuButton}
           className="atlas-menu-toggle"
@@ -77,8 +88,6 @@ export default function AtlasShell({ children }: { children: ReactNode }) {
           </svg>
           Menu
         </button>
-      </header>
-      <div className="atlas-layout">
         <nav
           id={navigationId}
           className="atlas-nav"
@@ -87,18 +96,23 @@ export default function AtlasShell({ children }: { children: ReactNode }) {
           onKeyDown={dismissOnEscape}
         >
           {groups.map(({ title, links }) => (
-            <div className="atlas-nav-group" key={title}>
-              <span>{title}</span>
+            <details className="atlas-nav-group" name="atlas-navigation" key={title}>
+              <summary>{title}<span aria-hidden="true">⌄</span></summary>
+              <div className="atlas-nav-links">
               {links.map(([label, href]) => {
                 const [path, hash] = href.split("#");
                 const targetView = new URLSearchParams(hash).get("view");
                 const current = pathname === path && (path !== "/" || targetView === view);
                 return <a key={href} href={href} onClick={followNavigationLink} aria-current={current ? "page" : undefined}>{label}</a>;
               })}
-            </div>
+              </div>
+            </details>
           ))}
         </nav>
-        <div className="atlas-content" ref={content} tabIndex={-1}>{children}</div>
+        <a className="atlas-search-link" href="/research" aria-label="Search research"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg></a>
+      </header>
+      <div className="atlas-layout">
+        <div className="atlas-content" id="atlas-content" ref={content} tabIndex={-1}>{children}</div>
       </div>
     </div>
   );
