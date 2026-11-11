@@ -7,9 +7,10 @@
     "nodejs_compat"
   ],
   "workers_dev": true,
-  "triggers": { "crons": ["0 */6 * * *"] },
+  "triggers": { "crons": ["0 * * * *"] },
   // Keep the production Access settings managed on the existing Worker.
   "keep_vars": true,
+  "vars": { "ATLAS_RESEARCH_UPDATES": "enabled" },
   "d1_databases": [
     {
       "binding": "DB",

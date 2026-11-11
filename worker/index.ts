@@ -3,12 +3,24 @@ import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
+import { importBatch } from "../research/foundation";
+import { researchUpdateDue, runResearchUpdates } from "../research/scheduled-updates";
+
 import { refreshNews } from "../research/news-import";
 
 const worker = {
-  async scheduled(_controller: ScheduledController, env: Cloudflare.Env) {
-    if (!env.DB) throw new Error("News database unavailable");
-    await refreshNews(env.DB);
+  async scheduled(controller: ScheduledController, env: Cloudflare.Env) {
+    if (!env.DB) throw new Error("Atlas database unavailable");
+    const tasks: Promise<unknown>[] = [];
+    if (new Date(controller.scheduledTime).getUTCHours() % 6 === 0) {
+      tasks.push(refreshNews(env.DB));
+    }
+    if (env.ATLAS_RESEARCH_UPDATES === "enabled" && researchUpdateDue(controller.scheduledTime)) {
+      tasks.push(runResearchUpdates(importBatch));
+    }
+    const results = await Promise.allSettled(tasks);
+    const failure = results.find(result => result.status === "rejected");
+    if (failure?.status === "rejected") throw failure.reason;
   },
   async fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const url = new URL(request.url);

@@ -17,7 +17,13 @@ export function reusable(license:string=""){return /^(cc[ -]by(?:[ -]\d(?:\.\d)?
 function db(){if(!env.DB)throw Error("Research database unavailable");return env.DB}
 async function json(url:string){
  const response=await fetch(url,{signal:AbortSignal.timeout(25000)});
- if(!response.ok)throw Error("Provider returned HTTP "+response.status);
+ if(!response.ok){
+  if(response.status===400 && new URL(url).hostname==="clinicaltrials.gov" &&
+     (await response.text()).includes("start over from the first page")){
+   throw Error("ClinicalTrials.gov pagination expired");
+  }
+  throw Error("Provider returned HTTP "+response.status);
+ }
  return response.json() as Promise<any>;
 }
 export function publicationRecord(s:any):StoredRecord {
@@ -95,8 +101,16 @@ export async function importBatch(id:CollectionId){
    await db().batch([...page.statements,db().prepare("UPDATE research_imports SET state='Ready',processed=processed+?,updated=?,error=NULL,lease=NULL,lease_until=0 WHERE id=? AND lease=?").bind(page.count,date,id,token),db().prepare("INSERT INTO research_import_runs VALUES (?,?,?,?,?,?)").bind(token,id,page.count,"Succeeded","Eligible article bodies",date)]);
    return {count:page.count,complete:page.count===0};
   }
-  const cursor=state.state==="Complete"?"*":state.cursor;
-  const page=await loadPage(id,cursor,state.total);
+  let cursor=state.state==="Complete"?"*":state.cursor;
+  let page;
+  try {
+   page=await loadPage(id,cursor,state.total);
+  } catch(error) {
+   if(id!=="trials" || cursor==="*" || !(error instanceof Error) ||
+      error.message!=="ClinicalTrials.gov pagination expired") throw error;
+   cursor="*";
+   page=await loadPage(id,cursor,state.total);
+  }
   const processed=(cursor==="*"?0:state.processed)+page.records.length;
   await db().batch([...page.records.map(upsert),db().prepare("UPDATE research_imports SET cursor=?,state=?,total=?,processed=?,updated=?,error=NULL,lease=NULL,lease_until=0 WHERE id=? AND lease=?").bind(page.next||"*",page.next?"Importing":"Complete",page.total,processed,date,id,token),db().prepare("INSERT INTO research_import_runs VALUES (?,?,?,?,?,?)").bind(token,id,page.records.length,"Succeeded","Saved records and checkpoint together",date)]);
   return {count:page.records.length,processed,total:page.total,complete:!page.next};

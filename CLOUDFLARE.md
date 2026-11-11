@@ -26,9 +26,9 @@ The DB binding points to `islet-atlas-db`, ID `5d965dbc-66fd-422e-a5b7-594788a26
 
 - Latest Nano-to-Macro source included from the current hosted source snapshot.
 - Public literature exploration and device-local notebooks do not require ChatGPT sign-in.
-- `ATLAS_AUTH_MODE=public` intentionally disables gateway-based account sync and maintainer AI access on this deployment. A verified independent identity provider must be installed before enabling those functions. Never enable the old header-only identity method on a directly accessible Worker.
+- Production uses independently verified Cloudflare Access identities and owner-only AI. An unconfigured standalone deployment fails closed for account sync and AI. Never enable the old header-only identity method on a directly accessible Worker.
 - Existing browser notebooks belong to the old origin: export JSON there before switching. They do not automatically appear on a new domain.
-- Accumulated database records, import checkpoints, and scheduled updates still need migration. The existing research-update automation continues to target the old site until explicitly switched after verification.
+- The accumulated research collection, full texts, import checkpoints, and run history are migrated to the independent D1 database. See Research update cutover below for the ongoing updater.
 - ChatGPT service credentials do not belong in this Cloudflare account. AI credentials and budgets must be configured separately after independent authentication is ready.
 
 ## Local validation
@@ -63,3 +63,23 @@ Keep `OPENAI_API_KEY` as a Worker secret. Verify signed-out investigations use
 the curated guide and owner investigations report model-assisted output. Test
 the notebook before enabling other accounts. Independent identities use an
 `access:` namespace, so existing ChatGPT notebooks are separate.
+
+## Research update cutover
+
+The original hosted research automation is disabled. Research updates run in
+the existing independent Worker at 03:00, 09:00, 15:00, and 21:00 in
+America/New_York. An hourly Cloudflare trigger selects those local hours,
+including daylight saving changes. The existing news refresh still runs every
+six hours in UTC.
+
+The Worker enables research updates with `ATLAS_RESEARCH_UPDATES=enabled`.
+Each run resumes D1 checkpoints using the same importer as the research API,
+with maximum batch counts of atlas 1, recent 10, publications 50, trials 20,
+and full text 10. Completed or busy sources stop early. A provider failure is
+recorded and does not stop the other sources. The next invocation retries the
+saved checkpoint. An expired ClinicalTrials.gov pagination token starts a new
+registry scan while retaining stored studies.
+
+The standalone updater script also targets `https://isletatlas.org`.
+The original hosted Site retains its research snapshot and returns a migration
+notice for research-update POSTs, preventing further writes there.

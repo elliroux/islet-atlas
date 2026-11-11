@@ -6,7 +6,7 @@ import time
 import urllib.error
 import urllib.request
 
-ORIGIN = "https://islet-evidence-atlas.mattepaste.chatgpt.site"
+ORIGIN = "https://isletatlas.org"
 ENDPOINT = ORIGIN + "/api/research"
 ACCESS = getpass.getpass("Site service access (hidden): ") if "--service" in sys.argv else ""
 HEADERS = {"Content-Type": "application/json", "Origin": ORIGIN}
