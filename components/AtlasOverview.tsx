@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { data, findings, records } from "../research/data";
+import { useState, useEffect } from "react";
+import { data, records } from "../research/data";
 import { supplementQuestion } from "../research/workbench";
 import { Dna, Mountain, CircleDot, CircleDashed, TrendingUp } from "lucide-react";
 
-const featuredIds = ["multiple-antibodies", "hla-progression", "tn-delay", "zim-insulin"];
+import NewsFeed from "./NewsFeed";
+
+type Publication = { id: string; title: string; url: string; year: number; provider: string; published: string | null };
 const pathways = [
   { title: "Genes", description: "Genetic risk and susceptibility pathways", Icon: Dna },
   { title: "Environment", description: "Exposures, infections, and early-life factors", Icon: Mountain },
@@ -24,9 +26,22 @@ export default function AtlasOverview({ inspect, investigate }: {
   inspect: (id: string) => void; investigate: (question: string) => void;
 }) {
   const [filter, setFilter] = useState("All research");
-  const featured = (filterIds[filter] || featuredIds).flatMap(id => {
-    const finding = findings.get(id); return finding ? [finding] : [];
-  });
+  const [publicationState, setPublicationState] = useState<{ topic: string; items: Publication[]; failed?: boolean } | null>(null);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/research/latest?topic=" + encodeURIComponent(filter), { signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error("Unavailable");
+        const result = await response.json() as { items?: Publication[] };
+        if (!Array.isArray(result.items)) throw new Error("Invalid response");
+        if (!controller.signal.aborted) setPublicationState({ topic: filter, items: result.items });
+      }).catch(() => { if (!controller.signal.aborted) setPublicationState({ topic: filter, items: [], failed: true }); });
+    return () => controller.abort();
+  }, [filter, retry]);
+  const current = publicationState?.topic === filter ? publicationState : null;
+  const latestFindings = data.findings.filter(f => !filterIds[filter] || filterIds[filter].includes(f.id))
+    .sort((a, b) => Number(records.get(b.record)!.year) - Number(records.get(a.record)!.year) || a.id.localeCompare(b.id)).slice(0, 4);
   const recent = [...data.records].sort((a, b) => Number(b.year) - Number(a.year)).slice(0, 5);
   return <div className="yhc-overview">
     <section className="yhc-hero" aria-labelledby="overview-title">
@@ -36,23 +51,38 @@ export default function AtlasOverview({ inspect, investigate }: {
         <p>A research platform that helps families and researchers explore linked evidence across studies, trials, datasets, and hypotheses.</p>
       </div>
     </section>
-    <div className="yhc-filters" role="group" aria-label="Featured research topics">
+    <div className="yhc-filters" role="group" aria-label="Latest research topics">
       <span className="yhc-label">Explore research</span>
       <div>{filters.map(name => <button key={name} aria-pressed={filter === name} onClick={() => setFilter(name)}>
         <span aria-hidden="true">{filter === name ? "✓" : "○"}</span>{name}
       </button>)}</div>
     </div>
-    <section className="yhc-section" aria-labelledby="featured-title">
-      <div className="yhc-section-heading"><h2 id="featured-title">Featured Research</h2><p className="yhc-label">Evidence across causes, mechanisms, and curative pathways</p><a href="/#view=Research+landscape">View all findings <span aria-hidden="true">→</span></a></div>
-      <div className="yhc-research-grid" aria-live="polite">{featured.map(f => {
+    <section className="yhc-section" aria-labelledby="latest-title">
+      <div className="yhc-section-heading"><h2 id="latest-title">Latest Research</h2><p className="yhc-label">Recent publications in the Atlas collection</p><a href="/research">Browse research <span aria-hidden="true">→</span></a></div>
+      <div aria-live="polite">
+      {!current && <p role="status">Loading latest publications…</p>}
+      {current?.failed && <p role="status">Latest publications are temporarily unavailable. Showing curated findings below. <button onClick={() => { setPublicationState(null); setRetry(value => value + 1); }}>Retry</button></p>}
+      {current && !current.failed && current.items.length === 0 && <p>No indexed publications match this topic yet. Showing curated findings below.</p>}
+      {!!current?.items.length && <div className="yhc-research-grid">{current.items.map(item => <a className="yhc-research-card atlas-publication-card" key={item.id} href={item.url} target="_blank" rel="noreferrer">
+        <h3>{item.title}</h3>
+        <div className="yhc-source">{item.provider} <span>{item.published || item.year}</span></div>
+        <div className="yhc-card-meta"><span>Indexed publication · not yet reviewed</span><span>Read source ↗</span></div>
+      </a>)}</div>}
+      {!current?.items.length && <div className="yhc-research-grid">{latestFindings.map(f => {
         const record = records.get(f.record)!;
         return <button className="yhc-research-card" key={f.id} onClick={() => inspect(f.id)}>
           <h3>{f.title}</h3><p>{f.summary}</p>
           <div className="yhc-source">{record.authors} <span>{record.year}</span></div>
           <div className="yhc-card-meta"><span>{f.area}</span><span>Trace evidence ↗</span></div>
         </button>;
-      })}</div>
-      <p className="yhc-collection-note">Selected findings from the curated collection. Open a finding for its study family, source, and limitations.</p>
+      })}</div>}
+      </div>
+      <p className="yhc-collection-note">{current?.items.length ? "Newest publication dates in the imported collection; not an exhaustive or real-time literature feed. Topic filters match titles and abstracts. Papers have not yet been appraised by Atlas." : "Curated findings, newest source year first. Within-year order is not chronological where exact dates are unavailable."}</p>
+    </section>
+    <section className="yhc-section" aria-labelledby="news-title">
+      <div className="yhc-section-heading"><h2 id="news-title">News &amp; Developments</h2><p className="yhc-label">New ideas, programs, and progress</p><a href="/news">All news →</a></div>
+      <NewsFeed limit={4} tiles />
+      <p className="yhc-collection-note">Source-linked news · <a href="/news/feed.xml">Subscribe via RSS</a></p>
     </section>
     <div className="yhc-evidence-row">
       <section className="yhc-map" aria-labelledby="map-title">

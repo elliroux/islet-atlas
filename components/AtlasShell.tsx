@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const groups = [
   { title: "Explore", links: [
     ["Overview", "/"],
+    ["News & Developments", "/news"],
     ["Nano to Macro", "/nano-to-macro"],
     ["Connections", "/connections"],
     ["Trajectories", "/trajectories"],
