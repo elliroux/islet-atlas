@@ -7,7 +7,7 @@ import AtlasShell from "../components/AtlasShell";
 export const metadata: Metadata = {
  title: "Islet Atlas · Type 1 Diabetes Research Discovery",
  description: "Investigate findings across type 1 diabetes studies, trials and dataset catalogs.",
- icons: {icon: "/favicon.svg"},
+ icons: {icon: "/favicon.svg?v=monochrome-20261111"},
  alternates: { types: { "application/rss+xml": "https://isletatlas.org/news/feed.xml" } }
 };
 export default async function RootLayout({children}:Readonly<{children:React.ReactNode}>) {
