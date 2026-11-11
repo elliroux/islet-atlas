@@ -43,3 +43,7 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
+# Materialized from assets/yhc-design-assets.json during dev/build
+/public/architecture-hero.jpg
+/public/fonts/*.woff2
