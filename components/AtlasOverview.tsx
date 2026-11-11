@@ -6,6 +6,7 @@ import { supplementQuestion } from "../research/workbench";
 import { Dna, Mountain, CircleDot, CircleDashed, TrendingUp } from "lucide-react";
 
 import NewsFeed from "./NewsFeed";
+import { GLP_TOPIC, GLP_DESCRIPTION } from "../research/topics";
 
 type Publication = { id: string; title: string; url: string; year: number; provider: string; published: string | null };
 const pathways = [
@@ -15,8 +16,9 @@ const pathways = [
   { title: "Beta cells", description: "Islet stress, immune attack, and cell function", Icon: CircleDot },
   { title: "Disease progression", description: "From autoimmunity to clinical onset", Icon: TrendingUp },
 ];
-const filters = ["All research", "Autoantibodies", "HLA", "Intervention", "Cell replacement"];
+const filters = ["All research", "Autoantibodies", "HLA", "Intervention", "Cell replacement", GLP_TOPIC];
 const filterIds: Record<string, string[]> = {
+  [GLP_TOPIC]: [],
   Autoantibodies: ["multiple-antibodies"], HLA: ["hla-progression"],
   Intervention: ["tn-delay", "protect-cpep", "prot-negative"],
   "Cell replacement": ["zim-insulin", "donor-anti-cd3", "vx264-cpep"],
@@ -59,10 +61,11 @@ export default function AtlasOverview({ inspect, investigate }: {
     </div>
     <section className="yhc-section" aria-labelledby="latest-title">
       <div className="yhc-section-heading"><h2 id="latest-title">Latest Research</h2><p className="yhc-label">Recent publications in the Atlas collection</p><a href="/research">Browse research <span aria-hidden="true">→</span></a></div>
+      {filter === GLP_TOPIC && <p>{GLP_DESCRIPTION}</p>}
       <div aria-live="polite">
       {!current && <p role="status">Loading latest publications…</p>}
-      {current?.failed && <p role="status">Latest publications are temporarily unavailable. Showing curated findings below. <button onClick={() => { setPublicationState(null); setRetry(value => value + 1); }}>Retry</button></p>}
-      {current && !current.failed && current.items.length === 0 && <p>No indexed publications match this topic yet. Showing curated findings below.</p>}
+      {current?.failed && <p role="status">Latest publications are temporarily unavailable. {latestFindings.length > 0 ? "Showing curated findings below." : "Please retry to load this topic."} <button onClick={() => { setPublicationState(null); setRetry(value => value + 1); }}>Retry</button></p>}
+      {current && !current.failed && current.items.length === 0 && <p>No indexed publications match this topic yet. {latestFindings.length > 0 ? "Showing curated findings below." : "New matching publications will appear as the collection is updated."}</p>}
       {!!current?.items.length && <div className="yhc-research-grid">{current.items.map(item => <a className="yhc-research-card atlas-publication-card" key={item.id} href={item.url} target="_blank" rel="noreferrer">
         <h3>{item.title}</h3>
         <div className="yhc-source">{item.provider} <span>{item.published || item.year}</span></div>
@@ -77,7 +80,7 @@ export default function AtlasOverview({ inspect, investigate }: {
         </button>;
       })}</div>}
       </div>
-      <p className="yhc-collection-note">{current?.items.length ? "Newest publication dates in the imported collection; not an exhaustive or real-time literature feed. Topic filters match titles and abstracts. Papers have not yet been appraised by Atlas." : "Curated findings, newest source year first. Within-year order is not chronological where exact dates are unavailable."}</p>
+      <p className="yhc-collection-note">{current?.items.length ? "Newest publication dates in the imported collection; not an exhaustive or real-time literature feed. Topic filters match titles and abstracts. Papers have not yet been appraised by Atlas." : latestFindings.length === 0 ? "This topic searches titles and abstracts in the imported T1D collection; coverage is selective." : "Curated findings, newest source year first. Within-year order is not chronological where exact dates are unavailable."}</p>
     </section>
     <section className="yhc-section" aria-labelledby="news-title">
       <div className="yhc-section-heading"><h2 id="news-title">News &amp; Developments</h2><p className="yhc-label">New ideas, programs, and progress</p><a href="/news">All news →</a></div>

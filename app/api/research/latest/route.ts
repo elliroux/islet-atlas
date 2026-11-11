@@ -1,7 +1,9 @@
 import { env } from "cloudflare:workers";
+import { GLP_TOPIC, GLP_TERMS } from "../../../../research/topics";
 
 export const dynamic = "force-dynamic";
 const topics: Record<string, string[]> = {
+  [GLP_TOPIC]: GLP_TERMS,
   Autoantibodies: ["autoantibod", "seroconversion"],
   HLA: ["HLA", "human leukocyte antigen"],
   Intervention: ["intervention", "therapy", "treatment", "teplizumab"],
