@@ -81,7 +81,7 @@ export default function AtlasOverview({ inspect, investigate }: {
     </section>
     <section className="yhc-section" aria-labelledby="news-title">
       <div className="yhc-section-heading"><h2 id="news-title">News &amp; Developments</h2><p className="yhc-label">New ideas, programs, and progress</p><a href="/news">All news →</a></div>
-      <NewsFeed limit={3} />
+      <NewsFeed limit={4} tiles />
       <p className="yhc-collection-note">Curated source-linked updates · <a href="/news/feed.xml">Subscribe via RSS</a></p>
     </section>
     <div className="yhc-evidence-row">
