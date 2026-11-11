@@ -3,6 +3,7 @@ import {useState,useEffect,useRef} from "react";
 import {data,findings,records,familyOf,rankedFindings,areas,topic} from "../research/data";
 import {leads,threadQuestion} from "../research/leads";
 import {evidenceAnswer} from "../research/engine";
+import AtlasOverview from "../components/AtlasOverview";
 import FindingTrace from "../components/FindingTrace";
 import {atlasCard,type Trace} from "../research/trace";
 import CohortComparison from "../components/CohortComparison";
@@ -55,23 +56,9 @@ export default function Page(){
    "Explore possible links between findings from different type 1 diabetes studies, then trace each link back to the evidence.",
  ];
  return <div className="atlas-workspace"><main><article className="atlas-page">
-   <p className="atlas-kicker">{["Evidence","Evidence","Evidence","Workspace","Workspace","About","Explore","Overview"][tab]}</p>
-   <h1>{headings[tab]}</h1>
-   <p className="intro">{intros[tab]}</p>
-   {tab===7 && <>
-     <section className="hero">
-       <div>
-         <span className="atlas-kicker">Featured research question</span>
-         <h2>{supplementQuestion}</h2>
-         <p>Follow the studies, their outcomes, and the questions they leave open.</p>
-         <button className="dark" onClick={()=>openAsk(supplementQuestion)}>Start investigation →</button>
-       </div>
-     </section>
-     <div className="atlas-overview-links">
-       <section className="panel"><h2>Explore the biology</h2><p>Move from molecules to populations.</p><a href="/nano-to-macro">Open Nano to Macro →</a></section>
-       <section className="panel"><h2>Browse the evidence</h2><p>Find a result and trace it back to its study.</p><a href="/#view=Research+landscape">Open findings →</a></section>
-     </div>
-   </>}
+   {tab!==7 && <><p className="atlas-kicker">{["Evidence","Evidence","Evidence","Workspace","Workspace","About","Explore"][tab]}</p>
+   <h1>{headings[tab]}</h1><p className="intro">{intros[tab]}</p></>}
+   {tab===7 && <AtlasOverview inspect={fid=>nav(0,fid)} investigate={openAsk}/>}
  {tab===6&&<ConnectionExplorer inspect={fid=>nav(6,fid)} investigate={openAsk}/>}
  {tab===0&&<><section className="hero"><div><label>FEATURED RESEARCH THREAD</label><h2>Can supplements slow<br/>type 1 diabetes?</h2><button className="dark" disabled={busy} onClick={()=>{U(supplementQuestion);void ask(supplementQuestion)}}>Start investigation &nbsp; →</button></div><img src="/islet-field.svg" alt=""/></section><button className="previous-thread" onClick={()=>openAsk(threadQuestion)}>Explore the immune-mediated beta-cell loss thread →</button><div className="cards">{areas.map((ar,i)=><button className={"area area"+i+(area===ar?" selected":"")} key={ar} onClick={()=>A(area===ar?"":ar)}><b>{["⌬","⌁","✣"][i]}</b><strong>{ar}</strong><small>{["What starts the disease?","What changes its course?","What restores cell function?"][i]}</small><em>{data.findings.filter(x=>x.area===ar).length} findings &nbsp; →</em></button>)}</div><div className="sectionhead"><h2>Finding index</h2><span>{list.length} findings</span></div><div className="tools"><input placeholder="Search findings or studies…" aria-label="Search findings" value={query} onChange={e=>Q(e.target.value)}/>{select("All stages",stage,S,data.findings.map(x=>x.stage))}{select("Evidence type",type,Y,data.findings.map(x=>x.evidence))}{select("Mechanism",mechanism,M,data.findings.map(topic))}</div><div className="actions"><label><input type="checkbox" checked={group} onChange={e=>G(e.target.checked)}/> Group by study family</label>{(area||stage||type||mechanism||query)&&<button onClick={()=>{A("");S("");Y("");M("");Q("")}}>Clear filters ×</button>}</div>{list.map((x,i)=><div key={x.id}>{group&&(!i||familyOf(list[i-1]).id!==familyOf(x).id)&&<h3>{familyOf(x).name}</h3>}<button className="row" onClick={()=>nav(0,x.id)}><span className={"tag t"+areas.indexOf(x.area)}>{x.area}</span><strong>{x.title}<small>{familyOf(x).name} · {records.get(x.record)!.year}</small></strong><span className="stage">{x.stage}</span>↗</button></div>)}{!list.length&&<p>No findings match these filters.</p>}</>}
  {tab===1&&<><div className="panel"><label>SELECT TWO FINDINGS</label><div className="pair">{selector(left,L,"First finding")}{selector(right,R,"Second finding")}</div><h3>Can these results be compared?</h3><p>{left===right?"These are the same finding.":familyOf(a).id===familyOf(b).id?"These findings share a study family. Check the participant subsets before counting them as corroboration.":"These belong to different study families. Separate families alone do not establish independent replication."} {a.stage!==b.stage?"Disease stages differ. ":""}{a.endpoint!==b.endpoint?"The outcomes use different definitions. Compare their clinical meaning before comparing effect sizes.":""}</p></div><div className="tablewrap"><table><thead><tr><th>Evidence field</th><th>{cite(left)}</th><th>{cite(right)}</th></tr></thead><tbody>{fields.map((k,i)=><tr key={k}><th>{labels[i]}</th><td>{a[k]}</td><td>{b[k]}</td></tr>)}</tbody></table></div></>}
