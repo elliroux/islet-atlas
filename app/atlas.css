@@ -46,3 +46,7 @@ h1,h2,h3,.brand{font-family:var(--atlas-font);font-weight:600}h1{letter-spacing:
 
 body > nav[aria-label="Account"]{display:flex;justify-content:flex-end;align-items:center;gap:16px;padding:7px clamp(20px,4vw,64px);background:#fafafa;border-bottom:1px solid #d8d8d8;color:#555;font:11px/1.5 var(--atlas-font)}
 body > nav[aria-label="Account"] a{color:#171717;text-underline-offset:3px}
+
+/* Homepage research and editorial news feeds. */
+.atlas-publication-card{text-decoration:none;color:inherit;gap:16px}.atlas-publication-card:focus-visible,.atlas-news-item a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.atlas-news-feed{display:grid;gap:16px}.atlas-news-item{padding:18px 0;border-bottom:1px solid #d8d8d8;max-width:960px}.atlas-news-item:last-child{border-bottom:0}.atlas-news-item h3{font-size:22px;line-height:1.3;margin:10px 0}.atlas-news-item h3 a{text-decoration:none;text-underline-offset:4px}.atlas-news-item h3 a:hover{text-decoration:underline}.atlas-news-item p{font-size:14px;line-height:1.65;max-width:85ch}.atlas-news-context{color:#555;border-left:2px solid #d8d8d8;padding-left:14px}
