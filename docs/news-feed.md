@@ -2,6 +2,10 @@
 
 Latest Research reads the four newest publications from the existing D1 collection via `/api/research/latest`. Publication dates, not import timestamps, determine order. This change does not alter the research import schedule.
 
+## Cloudflare build configuration
+
+Both Production and Previews Base must use `pnpm run build:cloudflare` as the build command. The generic `pnpm run build` uses the legacy Sites configuration and can combine its placeholder `DB` with the standalone Wrangler binding, causing duplicate-binding validation failures. Keep the preview command `npx wrangler preview`; production uses `pnpm run deploy:cloudflare`.
+
 ## Automatic news
 
 The existing Cloudflare Worker runs `refreshNews` at 00:00, 06:00, 12:00, and 18:00 UTC, independently of browser visits or the owner's computer. Wrangler manages this trigger in `wrangler.jsonc`; the built Worker exports `scheduled`. Deploy using the existing Cloudflare build/deploy workflow, which applies `0002_news_feed.sql` before publishing. The schedule is only active after deployment. No Codex desktop automation, AI credentials, or additional service is required.
