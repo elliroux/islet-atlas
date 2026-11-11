@@ -10,7 +10,9 @@ const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
 
 const { d1, r2 } = hostingConfig;
-const standalone = process.env.ATLAS_DEPLOY_TARGET === "cloudflare";
+// Cloudflare preview branches may retain the generic build command.
+// Always select the standalone bindings inside Workers Builds.
+const standalone = process.env.ATLAS_DEPLOY_TARGET === "cloudflare" || process.env.WORKERS_CI === "1";
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
