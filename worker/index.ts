@@ -3,7 +3,13 @@ import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
+import { refreshNews } from "../research/news-import";
+
 const worker = {
+  async scheduled(_controller: ScheduledController, env: Cloudflare.Env) {
+    if (!env.DB) throw new Error("News database unavailable");
+    await refreshNews(env.DB);
+  },
   async fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const url = new URL(request.url);
     if (env.ATLAS_AUTH_MODE === "access" && url.hostname === "isletatlas.org" &&

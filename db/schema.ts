@@ -43,3 +43,18 @@ export const researchImportRuns = sqliteTable("research_import_runs", {
   detail: text("detail").notNull(),
   created: text("created").notNull(),
 });
+
+export const newsItems = sqliteTable("news_items", {
+  url: text("url").primaryKey(),
+  published: text("published").notNull(),
+  document: text("document").notNull(),
+});
+export const newsSources = sqliteTable("news_sources", {
+  id: text("id").primaryKey(),
+  lastChecked: text("last_checked"),
+  lastSuccess: text("last_success"),
+  error: text("error"),
+  itemCount: integer("item_count").notNull().default(0),
+  lease: text("lease"),
+  leaseUntil: integer("lease_until").notNull().default(0),
+});
