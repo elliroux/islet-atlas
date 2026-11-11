@@ -32,7 +32,7 @@ export default function AtlasOverview({ inspect, investigate }: {
     <section className="yhc-hero" aria-labelledby="overview-title">
       <img src="/architecture-hero.jpg" alt="" className="yhc-hero-image" />
       <div className="yhc-hero-copy">
-        <h1 id="overview-title">Connecting diabetes research to uncover new patterns, causes, and curative pathways.</h1>
+        <h1 id="overview-title">Connecting diabetes research to uncover new patterns, causes and curative pathways.</h1>
         <p>A research platform that helps families and researchers explore linked evidence across studies, trials, datasets, and hypotheses.</p>
       </div>
     </section>
